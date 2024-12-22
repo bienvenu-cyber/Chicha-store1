@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  backend:
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/chicha_store_prod
+      - REDIS_HOST=redis
+      - LOGGING_LEVEL=error
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 2
+        delay: 5s
+        order: rolling-update
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+  frontend:
+    environment:
+      - REACT_APP_API_URL=https://api.chichastore.com
+      - REACT_APP_ENVIRONMENT=production
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 2
+        delay: 5s
+        order: rolling-update
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+  mongodb:
+    volumes:
+      - prod-data:/data/db
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis:
+    volumes:
+      - prod-redis:/data
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+volumes:
+  prod-data:
+  prod-redis:

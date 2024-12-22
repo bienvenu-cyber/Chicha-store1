@@ -1,0 +1,287 @@
+{
+    "products": [
+        {
+            "id": "chc001",
+            "name": "Chicha Khalil Mamoon Double",
+            "category": "premium",
+            "subcategory": "traditionnelle",
+            "description": "Chicha traditionnelle Khalil Mamoon double tuyau, finition acier inoxydable. Hauteur 85cm, excellente qualité de fabrication égyptienne.",
+            "price": 45000,
+            "stock": 10,
+            "images": {
+                "main": "https://m.media-amazon.com/images/I/61+-CpIZuWL._AC_SL1500_.jpg",
+                "gallery": [
+                    "https://m.media-amazon.com/images/I/61+-CpIZuWL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71H4mz9Ym6L._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71wrbLhB8EL._AC_SL1500_.jpg"
+                ]
+            },
+            "specifications": {
+                "height": "85cm",
+                "material": "Acier inoxydable",
+                "hoseCount": 2,
+                "bowlType": "Céramique traditionnelle",
+                "origin": "Égypte"
+            },
+            "features": [
+                "Double tuyau",
+                "Vase en verre épais",
+                "Tige en acier inoxydable",
+                "Plateau large décoré"
+            ],
+            "rating": 4.8,
+            "reviewCount": 45,
+            "tags": ["premium", "traditionnelle", "double tuyau", "khalil mamoon"]
+        },
+        {
+            "id": "chc002",
+            "name": "Chicha LED Crystal",
+            "category": "modern",
+            "subcategory": "design",
+            "description": "Chicha moderne avec éclairage LED multicolore, vase en cristal et structure en aluminium. Design élégant et performances exceptionnelles.",
+            "price": 55000,
+            "stock": 5,
+            "images": {
+                "main": "https://m.media-amazon.com/images/I/71nwafQhqbL._AC_SL1500_.jpg",
+                "gallery": [
+                    "https://m.media-amazon.com/images/I/71nwafQhqbL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71KPj5oAVnL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71J95PMTQ2L._AC_SL1500_.jpg"
+                ]
+            },
+            "specifications": {
+                "height": "65cm",
+                "material": "Aluminium et Cristal",
+                "hoseCount": 1,
+                "bowlType": "Phunnel en silicone",
+                "ledSystem": "RGB avec télécommande"
+            },
+            "features": [
+                "Éclairage LED RGB",
+                "Vase en cristal",
+                "Diffuseur de fumée",
+                "Télécommande incluse"
+            ],
+            "rating": 4.9,
+            "reviewCount": 32,
+            "tags": ["moderne", "led", "crystal", "design"]
+        },
+        {
+            "id": "chc003",
+            "name": "Pack Charbon Naturel Premium",
+            "category": "accessories",
+            "subcategory": "charbon",
+            "description": "Charbon 100% naturel de première qualité, longue durée de combustion, peu de cendres. Boîte de 1kg.",
+            "price": 5000,
+            "stock": 50,
+            "images": {
+                "main": "https://m.media-amazon.com/images/I/81DgLwUxHBL._AC_SL1500_.jpg",
+                "gallery": [
+                    "https://m.media-amazon.com/images/I/81DgLwUxHBL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/81t3eE+jUeL._AC_SL1500_.jpg"
+                ]
+            },
+            "specifications": {
+                "weight": "1kg",
+                "pieceCount": "72 cubes",
+                "burnTime": "90 minutes",
+                "type": "Naturel"
+            },
+            "features": [
+                "100% naturel",
+                "Longue durée",
+                "Peu de cendres",
+                "Allumage rapide"
+            ],
+            "rating": 4.7,
+            "reviewCount": 128,
+            "tags": ["accessoires", "charbon", "consommables"]
+        },
+        {
+            "id": "chc004",
+            "name": "Chicha Oduman N7",
+            "category": "premium",
+            "subcategory": "moderne",
+            "description": "Chicha en verre borosilicate de haute qualité avec design minimaliste. Diffusion exceptionnelle et facilité de nettoyage.",
+            "price": 75000,
+            "stock": 3,
+            "images": {
+                "main": "https://m.media-amazon.com/images/I/61R4fQyJNhL._AC_SL1500_.jpg",
+                "gallery": [
+                    "https://m.media-amazon.com/images/I/61R4fQyJNhL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71H0I9mwSQL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71H0I9mwSQL._AC_SL1500_.jpg"
+                ]
+            },
+            "specifications": {
+                "height": "45cm",
+                "material": "Verre borosilicate et acier",
+                "hoseCount": 1,
+                "bowlType": "Phunnel en verre"
+            },
+            "features": [
+                "Verre borosilicate",
+                "Design minimaliste",
+                "Diffusion optimale",
+                "Facile à nettoyer"
+            ],
+            "rating": 4.9,
+            "reviewCount": 27,
+            "tags": ["premium", "verre", "moderne", "oduman"]
+        },
+        {
+            "id": "chc005",
+            "name": "Tuyau Silicone Deluxe",
+            "category": "accessories",
+            "subcategory": "tuyaux",
+            "description": "Tuyau en silicone de qualité alimentaire avec embout en aluminium. Longueur 1.5m, lavable en machine.",
+            "price": 8000,
+            "stock": 25,
+            "images": {
+                "main": "https://m.media-amazon.com/images/I/61dqCzGg3XL._AC_SL1500_.jpg",
+                "gallery": [
+                    "https://m.media-amazon.com/images/I/61dqCzGg3XL._AC_SL1500_.jpg",
+                    "https://m.media-amazon.com/images/I/71dP4GdvmFL._AC_SL1500_.jpg"
+                ]
+            },
+            "specifications": {
+                "length": "1.5m",
+                "material": "Silicone alimentaire",
+                "washable": true,
+                "tipMaterial": "Aluminium"
+            },
+            "features": [
+                "Silicone alimentaire",
+                "Embout aluminium",
+                "Lavable en machine",
+                "Anti-torsion"
+            ],
+            "rating": 4.6,
+            "reviewCount": 89,
+            "tags": ["accessoires", "tuyau", "silicone"]
+        },
+        {
+            "id": "chc006",
+            "name": "Foyer Phunnel HMD",
+            "category": "accessories",
+            "subcategory": "foyers",
+            "description": "Foyer phunnel en céramique haute température avec système HMD (Heat Management Device) intégré.",
+            "price": 12000,
+            "stock": 15,
+            "images": {
+                "main": "/images/products/foyer-phunnel.jpg",
+                "gallery": [
+                    "/images/products/foyer-phunnel-1.jpg",
+                    "/images/products/foyer-phunnel-2.jpg"
+                ]
+            },
+            "specifications": {
+                "material": "Céramique haute température",
+                "type": "Phunnel",
+                "hmdCompatible": true,
+                "capacity": "20-25g"
+            },
+            "features": [
+                "HMD intégré",
+                "Céramique haute qualité",
+                "Économie de tabac",
+                "Longue durée de session"
+            ],
+            "rating": 4.8,
+            "reviewCount": 64,
+            "tags": ["accessoires", "foyer", "phunnel", "hmd"]
+        },
+        {
+            "id": "chc007",
+            "name": "Chicha Portable Mini Cloud",
+            "category": "modern",
+            "subcategory": "portable",
+            "description": "Chicha compacte et portable, parfaite pour les déplacements. Design moderne et performances surprenantes.",
+            "price": 25000,
+            "stock": 20,
+            "images": {
+                "main": "/images/products/mini-cloud.jpg",
+                "gallery": [
+                    "/images/products/mini-cloud-1.jpg",
+                    "/images/products/mini-cloud-2.jpg",
+                    "/images/products/mini-cloud-3.jpg"
+                ]
+            },
+            "specifications": {
+                "height": "28cm",
+                "material": "Aluminium anodisé",
+                "hoseCount": 1,
+                "weight": "800g"
+            },
+            "features": [
+                "Ultra portable",
+                "Sac de transport inclus",
+                "Montage rapide",
+                "Performance optimale"
+            ],
+            "rating": 4.7,
+            "reviewCount": 53,
+            "tags": ["moderne", "portable", "voyage", "compact"]
+        },
+        {
+            "id": "chc008",
+            "name": "Pack Nettoyage Complet",
+            "category": "accessories",
+            "subcategory": "entretien",
+            "description": "Kit complet de nettoyage pour chicha incluant brosses, produit nettoyant et accessoires d'entretien.",
+            "price": 15000,
+            "stock": 30,
+            "images": {
+                "main": "/images/products/kit-nettoyage.jpg",
+                "gallery": [
+                    "/images/products/kit-nettoyage-1.jpg",
+                    "/images/products/kit-nettoyage-2.jpg"
+                ]
+            },
+            "specifications": {
+                "contents": [
+                    "Brosses spéciales",
+                    "Produit nettoyant 500ml",
+                    "Écouvillons",
+                    "Chiffon microfibre"
+                ]
+            },
+            "features": [
+                "Nettoyage complet",
+                "Produits écologiques",
+                "Brosses adaptées",
+                "Notice incluse"
+            ],
+            "rating": 4.5,
+            "reviewCount": 41,
+            "tags": ["accessoires", "nettoyage", "entretien"]
+        }
+    ],
+    "categories": [
+        {
+            "id": "premium",
+            "name": "Premium",
+            "description": "Chichas haut de gamme pour les connaisseurs"
+        },
+        {
+            "id": "modern",
+            "name": "Moderne",
+            "description": "Chichas au design contemporain"
+        },
+        {
+            "id": "accessories",
+            "name": "Accessoires",
+            "description": "Tout le nécessaire pour votre chicha"
+        }
+    ],
+    "subcategories": {
+        "traditionnelle": "Chichas de style traditionnel",
+        "design": "Chichas au design unique",
+        "moderne": "Chichas contemporaines",
+        "portable": "Chichas compactes et transportables",
+        "charbon": "Charbons et accessoires",
+        "tuyaux": "Tuyaux et embouts",
+        "foyers": "Foyers et systèmes de chauffe",
+        "entretien": "Produits d'entretien et nettoyage"
+    }
+}
