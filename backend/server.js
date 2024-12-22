@@ -6,11 +6,18 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const path = require('path');
+const config = require('./config/config');
 
 // Services
 const logger = require('./services/logger');
 const WebSocketService = require('./services/websocketService');
 const recommendationService = require('./services/recommendationService');
+const InnovationIntegrationService = require('./services/innovationIntegrationService');
+const AugmentedRealityService = require('./frontend/src/services/augmentedRealityService');
+const AIRecommendationEngine = require('./services/aiRecommendationEngine');
+const BehavioralAIService = require('./services/behavioralAIService');
+const CommunityEngagementService = require('./services/communityEngagementService');
+const MixCreationGameService = require('./services/mixCreationGameService');
 
 // Routes
 const productRoutes = require('./routes/products');
@@ -139,6 +146,47 @@ app.post('/api/recommendations/browsing', async (req, res) => {
   }
 });
 
+// Nouvelles routes d'innovation
+app.get('/api/innovations/initialize', async (req, res) => {
+  try {
+    const user = req.user; // À remplacer par l'authentification réelle
+    const userExperience = await InnovationIntegrationService.initializeUserExperience(user);
+    res.json(userExperience);
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Erreur lors de l\'initialisation de l\'expérience utilisateur', 
+      error: error.message 
+    });
+  }
+});
+
+app.post('/api/mix/create', async (req, res) => {
+  try {
+    const user = req.user; // À remplacer par l'authentification réelle
+    const mixData = req.body;
+    const augmentedMixCreation = await InnovationIntegrationService.augmentMixCreation(user, mixData);
+    res.json(augmentedMixCreation);
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Erreur lors de la création du mélange', 
+      error: error.message 
+    });
+  }
+});
+
+app.get('/api/user/report', async (req, res) => {
+  try {
+    const user = req.user; // À remplacer par l'authentification réelle
+    const comprehensiveReport = await InnovationIntegrationService.generateComprehensiveUserReport(user);
+    res.json(comprehensiveReport);
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Erreur lors de la génération du rapport utilisateur', 
+      error: error.message 
+    });
+  }
+});
+
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
   logger.error('Unhandled Error', { 
@@ -181,6 +229,16 @@ const websocketService = new WebSocketService(server);
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   logger.info(`Serveur démarré sur le port ${PORT}`);
+  
+  // Initialisation des services d'innovation
+  if (config.innovations.augmentedReality.enabled) {
+    console.log('🕶️  Service de Réalité Augmentée initialisé');
+  }
+  
+  if (config.innovations.aiRecommendation.enabled) {
+    AIRecommendationEngine.initializeDeepLearningModel();
+    console.log('🧠 Moteur de Recommandation IA initialisé');
+  }
 });
 
 module.exports = app;
