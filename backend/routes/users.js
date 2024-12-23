@@ -113,16 +113,6 @@ router.post('/create-admin', async (req, res) => {
     }
 });
 
-// Route pour lister tous les utilisateurs (pour le développement)
-router.get('/users', async (req, res) => {
-    try {
-        const users = await User.find({}).select('-password');
-        res.json(users);
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-});
-
 // Liste des utilisateurs (admin seulement)
 router.get('/', adminAuth, async (req, res) => {
     try {

@@ -1,12 +1,15 @@
-const LoyaltyProgram = require('../models/LoyaltyProgram');
+const { LoyaltyProgram, Reward } = require('../models/LoyaltyProgram');
 const User = require('../models/User');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 
 class LoyaltyService {
   async initializeLoyaltyProgram(userId) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      // Vérifier si un programme existe déjà
-      let loyaltyProgram = await LoyaltyProgram.findOne({ user: userId });
+      let loyaltyProgram = await LoyaltyProgram.findOne({ user: userId }).session(session);
 
       if (!loyaltyProgram) {
         const referralCode = this.generateReferralCode();
@@ -14,84 +17,120 @@ class LoyaltyService {
         loyaltyProgram = new LoyaltyProgram({
           user: userId,
           referralCode,
-          points: 50 // Points bonus d'inscription
+          points: 50, // Points bonus d'inscription
+          tierLevel: 'bronze'
         });
 
-        await loyaltyProgram.save();
+        await loyaltyProgram.save({ session });
       }
+
+      await session.commitTransaction();
+      session.endSession();
 
       return loyaltyProgram;
     } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
       console.error('Erreur d\'initialisation du programme de fidélité', error);
       throw error;
     }
   }
 
-  async addPointsFromPurchase(userId, orderTotal) {
+  async addPointsFromPurchase(userId, orderTotal, products) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      const loyaltyProgram = await LoyaltyProgram.findOne({ user: userId });
+      const loyaltyProgram = await LoyaltyProgram.findOne({ user: userId }).session(session);
       
       if (!loyaltyProgram) {
         throw new Error('Programme de fidélité non trouvé');
       }
 
-      // 1 point pour chaque euro dépensé
-      const pointsEarned = Math.floor(orderTotal);
+      // Points basés sur le total et bonus pour certains produits
+      const basePoints = Math.floor(orderTotal);
+      const bonusPoints = this._calculateBonusPoints(products);
+      const totalPoints = basePoints + bonusPoints;
       
-      loyaltyProgram.addPoints(pointsEarned, 'purchase', `Achat de ${orderTotal}€`);
+      loyaltyProgram.addPoints(totalPoints, 'purchase', `Achat de ${orderTotal}€ avec bonus`);
       
-      await loyaltyProgram.save();
+      // Vérifier et débloquer des achievements
+      await this._checkAchievements(loyaltyProgram, orderTotal);
+      
+      await loyaltyProgram.save({ session });
+      await session.commitTransaction();
+      session.endSession();
 
       return loyaltyProgram;
     } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
       console.error('Erreur d\'ajout de points', error);
       throw error;
     }
   }
 
   async claimReward(userId, rewardId) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      const loyaltyProgram = await LoyaltyProgram.findOne({ user: userId });
+      const loyaltyProgram = await LoyaltyProgram.findOne({ user: userId }).session(session);
       
       if (!loyaltyProgram) {
         throw new Error('Programme de fidélité non trouvé');
       }
 
-      const reward = this.getRewardById(rewardId);
+      const reward = await Reward.findById(rewardId).session(session);
       
+      if (!reward) {
+        throw new Error('Récompense non trouvée');
+      }
+
       loyaltyProgram.claimReward(reward);
       
-      await loyaltyProgram.save();
+      await loyaltyProgram.save({ session });
+      await reward.save({ session });
+      
+      await session.commitTransaction();
+      session.endSession();
 
-      return loyaltyProgram;
+      return { loyaltyProgram, reward };
     } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
       console.error('Erreur de récupération de récompense', error);
       throw error;
     }
   }
 
   async processReferral(referrerUserId, referredEmail) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-      const referrerProgram = await LoyaltyProgram.findOne({ user: referrerUserId });
+      const referrerProgram = await LoyaltyProgram.findOne({ user: referrerUserId }).session(session);
       
       if (!referrerProgram) {
         throw new Error('Programme de fidélité non trouvé');
       }
 
-      // Vérifier que l'email référé n'est pas déjà un utilisateur
       const existingUser = await User.findOne({ email: referredEmail });
       
       if (existingUser) {
         throw new Error('Utilisateur déjà existant');
       }
 
-      // Ajouter des points de parrainage
       referrerProgram.addPoints(50, 'referral', `Parrainage de ${referredEmail}`);
       
-      await referrerProgram.save();
+      await referrerProgram.save({ session });
+      await session.commitTransaction();
+      session.endSession();
 
       return referrerProgram;
     } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
       console.error('Erreur de traitement du parrainage', error);
       throw error;
     }
@@ -99,7 +138,9 @@ class LoyaltyService {
 
   async getLoyaltyProgramDetails(userId) {
     try {
-      const loyaltyProgram = await LoyaltyProgram.findOne({ user: userId });
+      const loyaltyProgram = await LoyaltyProgram.findOne({ user: userId })
+        .populate('rewards')
+        .populate('referrals.referredUser');
       
       if (!loyaltyProgram) {
         throw new Error('Programme de fidélité non trouvé');
@@ -108,9 +149,12 @@ class LoyaltyService {
       return {
         points: loyaltyProgram.points,
         tierLevel: loyaltyProgram.tierLevel,
+        tierProgress: loyaltyProgram.tierProgress,
         referralCode: loyaltyProgram.referralCode,
         rewards: loyaltyProgram.rewards,
-        pointsHistory: loyaltyProgram.pointsHistory
+        pointsHistory: loyaltyProgram.pointsHistory,
+        referrals: loyaltyProgram.referrals,
+        achievements: loyaltyProgram.achievements
       };
     } catch (error) {
       console.error('Erreur de récupération des détails', error);
@@ -118,37 +162,53 @@ class LoyaltyService {
     }
   }
 
-  private generateReferralCode() {
-    return crypto.randomBytes(4).toString('hex').toUpperCase();
+  async createReward(rewardData) {
+    try {
+      const reward = new Reward(rewardData);
+      await reward.save();
+      return reward;
+    } catch (error) {
+      console.error('Erreur de création de récompense', error);
+      throw error;
+    }
   }
 
-  private getRewardById(rewardId) {
-    // Définir les récompenses disponibles
-    const rewards = {
-      'DISCOUNT_10': { 
-        _id: 'DISCOUNT_10', 
-        name: 'Réduction 10%', 
-        pointsCost: 100 
+  // Méthodes privées
+  _calculateBonusPoints(products) {
+    return products.reduce((bonus, product) => {
+      // Bonus pour certains produits premium
+      if (product.isPremium) return bonus + 10;
+      // Bonus pour quantité
+      if (product.quantity > 2) return bonus + 5;
+      return bonus;
+    }, 0);
+  }
+
+  async _checkAchievements(loyaltyProgram, orderTotal) {
+    const achievements = [
+      {
+        name: 'Premier Achat',
+        description: 'Effectuer son premier achat',
+        pointsAwarded: 25,
+        condition: () => true
       },
-      'FREE_SHIPPING': { 
-        _id: 'FREE_SHIPPING', 
-        name: 'Livraison Gratuite', 
-        pointsCost: 200 
-      },
-      'FREE_PRODUCT': { 
-        _id: 'FREE_PRODUCT', 
-        name: 'Chicha Offerte', 
-        pointsCost: 500 
+      {
+        name: 'Achat de Luxe',
+        description: 'Dépenser plus de 200€ en une seule commande',
+        pointsAwarded: 50,
+        condition: () => orderTotal > 200
       }
-    };
+    ];
 
-    const reward = rewards[rewardId];
-
-    if (!reward) {
-      throw new Error('Récompense non trouvée');
+    for (const achievement of achievements) {
+      if (achievement.condition()) {
+        loyaltyProgram.unlockAchievement(achievement);
+      }
     }
+  }
 
-    return reward;
+  generateReferralCode() {
+    return crypto.randomBytes(4).toString('hex').toUpperCase();
   }
 }
 

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+npm install prom-client @tensorflow/tfjs-node
+npm install -D @types/nodeconst mongoose = require('mongoose');
 const Redis = require('ioredis');
 const { createClient } = require('redis');
 
