@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  backend:
+    environment:
+      - NODE_ENV=staging
+      - MONGODB_URI=mongodb://mongodb:27017/chicha_store_staging
+      - REDIS_HOST=redis
+      - LOGGING_LEVEL=debug
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: rolling-update
+
+  frontend:
+    environment:
+      - REACT_APP_API_URL=https://staging-api.chichastore.com
+      - REACT_APP_ENVIRONMENT=staging
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: rolling-update
+
+  mongodb:
+    volumes:
+      - staging-data:/data/db
+
+  redis:
+    volumes:
+      - staging-redis:/data
+
+volumes:
+  staging-data:
+  staging-redis:

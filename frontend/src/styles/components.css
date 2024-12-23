@@ -1,0 +1,267 @@
+/* Recommendation Section */
+.recommendations-section {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.recommendation-card {
+  transition: transform 0.3s ease;
+}
+
+.recommendation-card:hover {
+  transform: scale(1.05);
+}
+
+/* Review Section */
+.review-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-card {
+  border-bottom: 1px solid #eaeaea;
+  padding: 1rem 0;
+}
+
+.review-rating {
+  color: #ffc107;
+  display: flex;
+  align-items: center;
+}
+
+.add-review-form {
+  margin-top: 1rem;
+}
+
+.review-rating-input {
+  color: #ffc107;
+  cursor: pointer;
+}
+
+/* Wishlist Button */
+.wishlist-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.wishlist-btn svg {
+  color: #888;
+}
+
+.wishlist-btn.in-wishlist svg {
+  color: #ff4136;
+}
+
+.wishlist-btn:hover svg {
+  opacity: 0.7;
+}
+
+/* Product Filters */
+.product-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.filter-modal {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  z-index: 100;
+}
+
+/* Coupon Applier */
+.coupon-applier {
+  background-color: #f4f4f4;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.coupon-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.coupon-input {
+  flex-grow: 1;
+  padding: 0.5rem;
+}
+
+.coupon-apply-btn {
+  margin-left: 0.5rem;
+}
+
+.coupon-error {
+  color: #ff4136;
+  margin-top: 0.5rem;
+}
+
+.coupon-success {
+  color: #2ecc40;
+  margin-top: 0.5rem;
+}
+
+.coupon-hints {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Styles pour les composants marketing */
+
+/* Newsletter Popup */
+.newsletter-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.newsletter-popup {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 500px;
+  text-align: center;
+  position: relative;
+}
+
+.newsletter-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.newsletter-icon {
+  font-size: 3rem;
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+/* Programme de Fidélité */
+.loyalty-program {
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.loyalty-points {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.loyalty-rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.loyalty-reward {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.loyalty-reward.locked {
+  opacity: 0.6;
+}
+
+.loyalty-reward:hover {
+  transform: scale(1.05);
+}
+
+/* Offres Personnalisées */
+.personalized-offers {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.personalized-offer {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.personalized-offer.claimed {
+  background-color: #f0f0f0;
+}
+
+.personalized-offer.expired {
+  opacity: 0.5;
+}
+
+.offer-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .newsletter-popup {
+    width: 90%;
+    margin: 0 5%;
+  }
+
+  .loyalty-rewards-grid,
+  .offers-grid {
+    grid-template-columns: 1fr;
+  }
+}
