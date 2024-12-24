@@ -1,0 +1,56 @@
+version: 2
+updates:
+  # Configuration pour le frontend
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "production"
+    ignore:
+      - dependency-name: "react-scripts"
+        versions: [">=6.0.0"]
+    labels:
+      - "dependencies"
+      - "frontend"
+    commit-message:
+      prefix: "chore(frontend)"
+      include: "scope"
+
+  # Configuration pour le backend
+  - package-ecosystem: "npm"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "production"
+    labels:
+      - "dependencies"
+      - "backend"
+    commit-message:
+      prefix: "chore(backend)"
+      include: "scope"
+
+  # Configuration pour l'admin
+  - package-ecosystem: "npm"
+    directory: "/admin"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "production"
+    labels:
+      - "dependencies"
+      - "admin"
+    commit-message:
+      prefix: "chore(admin)"
+      include: "scope"
+
+# Configuration de sécurité
+security-updates:
+  open-pull-requests-limit: 10
