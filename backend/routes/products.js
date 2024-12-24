@@ -1,12 +1,15 @@
-const express = require('express');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+
 const router = express.Router();
-const Product = require('../models/Product');
-const { auth, adminAuth } = require('../middleware/auth');
 
 // Obtenir tous les produits avec filtres
 router.get('/', async (req, res) => {
     try {
         const { category, search, minPrice, maxPrice, sort } = req.query;
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
         let query = {};
 
         // Filtres
@@ -24,7 +27,11 @@ router.get('/', async (req, res) => {
         if (sort === 'price-desc') sortOption.price = -1;
         if (sort === 'newest') sortOption.createdAt = -1;
 
-        const products = await Product.find(query).sort(sortOption);
+        const products = await productsCollection
+            .find(query)
+            .sort(sortOption)
+            .toArray();
+        
         res.json(products);
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -34,8 +41,15 @@ router.get('/', async (req, res) => {
 // Obtenir un produit par ID
 router.get('/:id', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send();
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOne({ 
+            _id: new ObjectId(req.params.id) 
+        });
+        
+        if (!product) return res.status(404).send('Produit non trouvé');
+        
         res.json(product);
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -43,88 +57,100 @@ router.get('/:id', async (req, res) => {
 });
 
 // Créer un nouveau produit (admin seulement)
-router.post('/', adminAuth, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const product = new Product(req.body);
-        await product.save();
-        res.status(201).json(product);
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.insertOne(req.body);
+        res.status(201).json(product.ops[0]);
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
 });
 
 // Mettre à jour un produit (admin seulement)
-router.patch('/:id', adminAuth, async (req, res) => {
+router.patch('/:id', async (req, res) => {
     try {
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOneAndUpdate(
+            { _id: new ObjectId(req.params.id) },
+            { $set: req.body },
+            { returnOriginal: false }
         );
-        if (!product) return res.status(404).send();
-        res.json(product);
+        
+        if (!product.value) return res.status(404).send('Produit non trouvé');
+        
+        res.json(product.value);
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
 });
 
 // Supprimer un produit (admin seulement)
-router.delete('/:id', adminAuth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const product = await Product.findByIdAndDelete(req.params.id);
-        if (!product) return res.status(404).send();
-        res.send(product);
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOneAndDelete({ 
+            _id: new ObjectId(req.params.id) 
+        });
+        
+        if (!product.value) return res.status(404).send('Produit non trouvé');
+        
+        res.send(product.value);
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
 });
 
 // Ajouter une évaluation
-router.post('/:id/ratings', auth, async (req, res) => {
+router.post('/:id/ratings', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send();
-
-        product.ratings.push({
-            user: req.user._id,
-            rating: req.body.rating,
-            comment: req.body.comment
-        });
-
-        await product.save();
-        res.status(201).json(product);
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOneAndUpdate(
+            { _id: new ObjectId(req.params.id) },
+            { $push: { ratings: req.body } },
+            { returnOriginal: false }
+        );
+        
+        if (!product.value) return res.status(404).send('Produit non trouvé');
+        
+        res.status(201).json(product.value);
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
 });
 
 // Ajouter un avis à un produit
-router.post('/:id/reviews', auth, async (req, res) => {
+router.post('/:id/reviews', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send('Produit non trouvé');
-
-        const { rating, comment } = req.body;
-
-        // Vérifier que l'utilisateur n'a pas déjà laissé un avis
-        const existingReview = product.ratings.find(r => r.user.toString() === req.user._id.toString());
-        if (existingReview) {
-            return res.status(400).send('Vous avez déjà laissé un avis pour ce produit');
-        }
-
-        // Ajouter le nouvel avis
-        product.ratings.push({
-            user: req.user._id,
-            rating: rating,
-            comment: comment
-        });
-
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOneAndUpdate(
+            { _id: new ObjectId(req.params.id) },
+            { $push: { ratings: req.body } },
+            { returnOriginal: false }
+        );
+        
+        if (!product.value) return res.status(404).send('Produit non trouvé');
+        
         // Calculer la note moyenne
-        const totalRatings = product.ratings.reduce((sum, r) => sum + r.rating, 0);
-        product.averageRating = totalRatings / product.ratings.length;
-
-        await product.save();
-        res.status(201).json(product);
+        const totalRatings = product.value.ratings.reduce((sum, r) => sum + r.rating, 0);
+        const averageRating = totalRatings / product.value.ratings.length;
+        
+        await productsCollection.updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: { averageRating } }
+        );
+        
+        res.status(201).json(product.value);
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -133,9 +159,15 @@ router.post('/:id/reviews', auth, async (req, res) => {
 // Récupérer les avis d'un produit
 router.get('/:id/reviews', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).populate('ratings.user', 'name');
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOne({ 
+            _id: new ObjectId(req.params.id) 
+        });
+        
         if (!product) return res.status(404).send('Produit non trouvé');
-
+        
         res.json(product.ratings);
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -143,60 +175,64 @@ router.get('/:id/reviews', async (req, res) => {
 });
 
 // Mettre à jour un avis
-router.put('/:id/reviews/:reviewId', auth, async (req, res) => {
+router.put('/:id/reviews/:reviewId', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send('Produit non trouvé');
-
-        const review = product.ratings.id(req.params.reviewId);
-        if (!review) return res.status(404).send('Avis non trouvé');
-
-        // Vérifier que l'utilisateur est bien l'auteur de l'avis
-        if (review.user.toString() !== req.user._id.toString()) {
-            return res.status(403).send('Non autorisé à modifier cet avis');
-        }
-
-        // Mettre à jour l'avis
-        review.rating = req.body.rating || review.rating;
-        review.comment = req.body.comment || review.comment;
-
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOneAndUpdate(
+            { 
+                _id: new ObjectId(req.params.id), 
+                'ratings._id': new ObjectId(req.params.reviewId) 
+            },
+            { $set: { 'ratings.$': req.body } },
+            { returnOriginal: false }
+        );
+        
+        if (!product.value) return res.status(404).send('Produit non trouvé');
+        
         // Recalculer la note moyenne
-        const totalRatings = product.ratings.reduce((sum, r) => sum + r.rating, 0);
-        product.averageRating = totalRatings / product.ratings.length;
-
-        await product.save();
-        res.json(product);
+        const totalRatings = product.value.ratings.reduce((sum, r) => sum + r.rating, 0);
+        const averageRating = totalRatings / product.value.ratings.length;
+        
+        await productsCollection.updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: { averageRating } }
+        );
+        
+        res.json(product.value);
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
 });
 
 // Supprimer un avis
-router.delete('/:id/reviews/:reviewId', auth, async (req, res) => {
+router.delete('/:id/reviews/:reviewId', async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id);
-        if (!product) return res.status(404).send('Produit non trouvé');
-
-        const reviewIndex = product.ratings.findIndex(r => r._id.toString() === req.params.reviewId);
-        if (reviewIndex === -1) return res.status(404).send('Avis non trouvé');
-
-        // Vérifier que l'utilisateur est bien l'auteur de l'avis
-        if (product.ratings[reviewIndex].user.toString() !== req.user._id.toString()) {
-            return res.status(403).send('Non autorisé à supprimer cet avis');
-        }
-
-        // Supprimer l'avis
-        product.ratings.splice(reviewIndex, 1);
-
+        const database = global.database;
+        const productsCollection = database.collection('products');
+        
+        const product = await productsCollection.findOneAndUpdate(
+            { _id: new ObjectId(req.params.id) },
+            { $pull: { ratings: { _id: new ObjectId(req.params.reviewId) } } },
+            { returnOriginal: false }
+        );
+        
+        if (!product.value) return res.status(404).send('Produit non trouvé');
+        
         // Recalculer la note moyenne
-        const totalRatings = product.ratings.reduce((sum, r) => sum + r.rating, 0);
-        product.averageRating = product.ratings.length > 0 ? totalRatings / product.ratings.length : 0;
-
-        await product.save();
-        res.json(product);
+        const totalRatings = product.value.ratings.reduce((sum, r) => sum + r.rating, 0);
+        const averageRating = product.value.ratings.length > 0 ? totalRatings / product.value.ratings.length : 0;
+        
+        await productsCollection.updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: { averageRating } }
+        );
+        
+        res.json(product.value);
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
 });
 
-module.exports = router;
+export default router;
