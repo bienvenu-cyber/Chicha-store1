@@ -24,7 +24,7 @@ export interface Order {
   createdAt?: Date;
 }
 
-const API_URL = 'http://localhost:5000/api/orders';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/orders';
 
 export const createOrder = async (orderData: Order): Promise<Order> => {
   try {

@@ -1,86 +1,98 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  Container, 
+  Grid, 
+  Typography, 
+  Button, 
+  Box, 
+  Rating, 
+  Select, 
+  MenuItem, 
+  FormControl, 
+  InputLabel 
+} from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { fetchProductDetails } from '../services/productService';
-import { Product } from '../types/Product';
-import WishlistButton from '../components/WishlistButton';
-import ReviewSection from '../components/ReviewSection';
-import RecommendationSection from '../components/RecommendationSection';
-import '../styles/components.css';
+import { fetchProductById, Product } from '../services/productService';
 
 const ProductDetailPage: React.FC = () => {
-  const { productId } = useParams<{ productId: string }>();
+  const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [rating, setRating] = useState<number | null>(4);
 
   useEffect(() => {
     const loadProduct = async () => {
-      try {
-        const fetchedProduct = await fetchProductDetails(productId);
+      if (id) {
+        const fetchedProduct = await fetchProductById(id);
         setProduct(fetchedProduct);
-      } catch (error) {
-        console.error('Failed to fetch product', error);
       }
     };
-
     loadProduct();
-  }, [productId]);
+  }, [id]);
 
-  const handleAddToCart = () => {
-    // Logique d'ajout au panier
-  };
-
-  if (!product) {
-    return <div>Chargement...</div>;
-  }
+  if (!product) return <Typography>Chargement...</Typography>;
 
   return (
-    <div className="product-detail-page">
-      <div className="product-header">
-        <h1>{product.name}</h1>
-        <WishlistButton product={product} size="large" />
-      </div>
+    <Container maxWidth="lg">
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <img 
+            src={product.imageUrl} 
+            alt={product.name} 
+            style={{ width: '100%', maxHeight: '500px', objectFit: 'cover' }} 
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h4" gutterBottom>
+            {product.name}
+          </Typography>
+          <Typography variant="h5" color="primary" gutterBottom>
+            {product.price} €
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {product.description}
+          </Typography>
+          
+          <Box display="flex" alignItems="center" mb={2}>
+            <Typography variant="body2" mr={2}>Note :</Typography>
+            <Rating 
+              name="product-rating" 
+              value={rating} 
+              onChange={(event, newValue) => setRating(newValue)}
+            />
+          </Box>
 
-      <div className="product-content">
-        <div className="product-image">
-          <img src={product.imageUrl} alt={product.name} />
-        </div>
+          <Box display="flex" alignItems="center" mb={2}>
+            <FormControl variant="outlined" sx={{ minWidth: 120, mr: 2 }}>
+              <InputLabel>Quantité</InputLabel>
+              <Select
+                value={quantity}
+                label="Quantité"
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              >
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <MenuItem key={num} value={num}>
+                    {num}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-        <div className="product-info">
-          <p className="product-description">{product.description}</p>
-          <div className="product-price">
-            {product.price}€
-          </div>
-
-          <div className="quantity-selector">
-            <button 
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            <Button 
+              variant="contained" 
+              color="primary" 
+              size="large"
             >
-              -
-            </button>
-            <span>{quantity}</span>
-            <button 
-              onClick={() => setQuantity(quantity + 1)}
-            >
-              +
-            </button>
-          </div>
+              Ajouter au panier
+            </Button>
+          </Box>
 
-          <button 
-            className="add-to-cart-btn"
-            onClick={handleAddToCart}
-          >
-            Ajouter au panier
-          </button>
-        </div>
-      </div>
-
-      <ReviewSection productId={productId} />
-
-      <RecommendationSection 
-        currentProductId={productId} 
-        categoryId={product.category} 
-      />
-    </div>
+          <Typography variant="subtitle1" color="textSecondary">
+            Catégorie : {product.category}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

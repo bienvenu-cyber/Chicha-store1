@@ -13,7 +13,7 @@ export interface RecommendationContext {
 }
 
 class RecommendationService {
-  private API_URL = 'http://localhost:5000/api/recommendations';
+  private API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/recommendations';
   private STORAGE_KEY = 'user_preferences';
 
   // Récupérer ou initialiser les préférences utilisateur

@@ -16,7 +16,7 @@ export interface Product {
   };
 }
 
-const API_URL = 'http://localhost:5000/api/products';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/products';
 
 export const fetchProducts = async (
   options: { 

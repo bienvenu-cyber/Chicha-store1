@@ -1,0 +1,49 @@
+# Dépendances
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environnement
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build
+build/
+dist/
+out/
+
+# Images et uploads
+uploads/
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Cache
+.cache/
+.next/
+
+# Tests
+coverage/
+.nyc_output/
+
+# Divers
+.tmp/
+temp/

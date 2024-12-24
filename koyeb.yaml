@@ -1,0 +1,27 @@
+version: '2'
+services:
+  - name: frontend
+    type: web
+    dockerfile: frontend/Dockerfile
+    routes:
+      - path: /
+        port: 80
+  
+  - name: backend
+    type: web
+    dockerfile: backend/Dockerfile
+    routes:
+      - path: /api
+        port: 3000
+
+  # Configuration des variables d'environnement
+  # Remplacez par vos vraies valeurs
+  env:
+    - key: DATABASE_URL
+      value: votre_url_mongodb
+    - key: JWT_SECRET
+      value: votre_secret_jwt
+    - key: FRONTEND_URL
+      value: https://votre-frontend.koyeb.app
+    - key: BACKEND_URL
+      value: https://votre-backend.koyeb.app

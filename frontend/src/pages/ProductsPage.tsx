@@ -19,7 +19,7 @@ import {
   Stack
 } from '@mui/material';
 import { fetchProducts, Product } from '../services/productService';
-import { useNotification } from '../contexts/NotificationContext.tsx';
+import { useNotification } from '../contexts/NotificationContext';
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);

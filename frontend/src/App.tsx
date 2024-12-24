@@ -4,17 +4,17 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 // Pages
-import HomePage from './pages/HomePage.tsx';
-import ProductsPage from './pages/ProductsPage.tsx';
-import ProductDetailPage from './pages/ProductDetailPage.tsx';
-import CartPage from './pages/CartPage.tsx';
-import CheckoutPage from './pages/CheckoutPage.tsx';
-import LoginPage from './pages/LoginPage.tsx';
-import RegisterPage from './pages/RegisterPage.tsx';
+import HomePage from './pages/HomePage';
+import ProductsPage from './pages/ProductsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 // Components
-import Navbar from './components/Navbar.tsx';
-import Footer from './components/Footer.tsx';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 const theme = createTheme({
   palette: {

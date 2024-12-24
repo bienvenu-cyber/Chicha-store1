@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: chicha-store-frontend
+    name: chicha-store-frontend-service
     env: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/build
@@ -10,7 +10,7 @@ services:
         destination: /index.html
 
   - type: web
-    name: chicha-store-backend
+    name: chicha-store-backend-service
     env: node
     region: frankfurt  # Région européenne
     plan: free

@@ -16,7 +16,7 @@ export interface LoginAttempt {
 }
 
 class MonitoringService {
-  private API_URL = 'http://localhost:5000/api/monitoring';
+  private API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/monitoring';
 
   async captureDeviceInfo(): Promise<DeviceInfo> {
     return {

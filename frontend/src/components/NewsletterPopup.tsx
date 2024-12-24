@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes, FaEnvelope } from 'react-icons/fa';
+import { Box, VStack, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { subscribeToNewsletter } from '../services/marketingService';
+import { animations, useAnimatedInteraction, AnimatedComponent } from '../styles/animations';
+import { useAccessibility } from '../hooks/useAccessibility';
 
 interface NewsletterPopupProps {
   onClose: () => void;
@@ -10,11 +13,12 @@ const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [showPopup, setShowPopup] = useState(false);
+  const { animateClick, animateHover } = useAnimatedInteraction();
+  const { accessibilityOptions } = useAccessibility();
+  const toast = useToast();
 
   useEffect(() => {
-    // Afficher le popup après 5 secondes de navigation sur le site
     const timer = setTimeout(() => {
-      // Vérifier si le popup n'a pas déjà été vu récemment
       const lastPopupShown = localStorage.getItem('newsletter_popup_timestamp');
       const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
 
@@ -34,65 +38,142 @@ const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ onClose }) => {
       await subscribeToNewsletter(email);
       setStatus('success');
       
-      // Réinitialiser après 3 secondes
+      toast({
+        title: "Inscription réussie !",
+        description: "Vous êtes maintenant abonné à notre newsletter.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top"
+      });
+
       setTimeout(() => {
         setStatus('idle');
         onClose();
       }, 3000);
     } catch (error) {
       setStatus('error');
-      console.error('Erreur d\'inscription à la newsletter', error);
+      toast({
+        title: "Erreur d'inscription",
+        description: "Une erreur s'est produite. Veuillez réessayer.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top"
+      });
     }
   };
 
   if (!showPopup) return null;
 
   return (
-    <div className="newsletter-popup-overlay">
-      <div className="newsletter-popup">
-        <button 
-          className="newsletter-close-btn" 
-          onClick={() => {
-            setShowPopup(false);
-            onClose();
+    <AnimatedComponent animationType="fadeIn">
+      <Box 
+        position="fixed" 
+        top="0" 
+        left="0" 
+        width="100%" 
+        height="100%" 
+        bg="rgba(0,0,0,0.5)" 
+        zIndex={1000} 
+        display="flex" 
+        alignItems="center" 
+        justifyContent="center"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="newsletter-title"
+      >
+        <VStack 
+          bg="white" 
+          p={8} 
+          borderRadius="lg" 
+          spacing={6} 
+          maxWidth="500px" 
+          position="relative"
+          boxShadow="xl"
+          sx={{
+            animation: `${animations.hover.scale} 2s infinite`,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'scale(1.02)',
+              boxShadow: 'lg'
+            }
           }}
         >
-          <FaTimes />
-        </button>
+          <Button 
+            position="absolute" 
+            top={4} 
+            right={4} 
+            onClick={(e) => {
+              animateClick(e);
+              setShowPopup(false);
+              onClose();
+            }}
+            aria-label="Fermer le popup"
+            variant="ghost"
+            colorScheme="red"
+          >
+            <FaTimes />
+          </Button>
 
-        <div className="newsletter-content">
-          <FaEnvelope className="newsletter-icon" />
-          <h2>Rejoignez Notre Communauté Chicha</h2>
-          <p>
-            Inscrivez-vous à notre newsletter et recevez 
-            10% de réduction sur votre première commande !
-          </p>
+          <Box 
+            as={FaEnvelope} 
+            w={16} 
+            h={16} 
+            color="blue.500"
+            sx={{
+              animation: `${animations.interaction.pulse} 2s infinite`
+            }}
+          />
 
-          <form onSubmit={handleSubmit}>
-            <input 
-              type="email" 
-              placeholder="Votre email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={status !== 'idle'}>
-              {status === 'idle' 
-                ? 'Je m\'inscris' 
-                : status === 'success' 
-                  ? 'Inscription réussie !' 
-                  : 'Erreur'}
-            </button>
+          <Text 
+            id="newsletter-title" 
+            fontSize={`${accessibilityOptions.fontSize + 4}px`} 
+            fontWeight="bold" 
+            textAlign="center"
+          >
+            Rejoignez Notre Communauté Chicha
+          </Text>
+
+          <Text textAlign="center" fontSize={`${accessibilityOptions.fontSize}px`}>
+            Inscrivez-vous à notre newsletter et recevez 10% de réduction sur votre première commande !
+          </Text>
+
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <VStack spacing={4}>
+              <Input 
+                type="email" 
+                placeholder="Votre email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                size="lg"
+                onMouseEnter={animateHover}
+                aria-label="Email pour la newsletter"
+              />
+              <Button 
+                type="submit" 
+                colorScheme="blue" 
+                width="full" 
+                disabled={status !== 'idle'}
+                onClick={animateClick}
+                sx={{
+                  '&:hover': {
+                    animation: `${animations.interaction.wiggle} 0.5s`
+                  }
+                }}
+              >
+                {status === 'idle' 
+                  ? 'Je m\'inscris' 
+                  : status === 'success' 
+                    ? 'Inscription réussie !' 
+                    : 'Erreur'}
+              </Button>
+            </VStack>
           </form>
-
-          {status === 'error' && (
-            <p className="newsletter-error">
-              Une erreur s'est produite. Veuillez réessayer.
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+        </VStack>
+      </Box>
+    </AnimatedComponent>
   );
 };
 

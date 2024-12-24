@@ -56,7 +56,7 @@ git commit -m "docs: update README with setup instructions"
 4. Run tests and linters
 5. Commit with conventional commit message
 6. Push and create a Pull Request
-
+# Connectez-vous à Render
 ### Commit Tools
 
 We use `commitizen` for interactive commit message creation:
