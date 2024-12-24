@@ -1,22 +1,28 @@
-const express = require('express');
-const http = require('http');
-const { MongoClient } = require('mongodb');
-const cors = require('cors');
-require('dotenv').config();
-const path = require('path');
+import express from 'express';
+import { MongoClient } from 'mongodb';
+import http from 'http';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Services
-const WebSocketService = require('./services/websocketService');
-const recommendationService = require('./services/recommendationService');
+import WebSocketService from './services/websocketService.js';
+import recommendationService from './services/recommendationService.js';
 
 // Routes
-const productRoutes = require('./routes/products');
-const userRoutes = require('./routes/users');
-const orderRoutes = require('./routes/orders');
-const paymentRoutes = require('./routes/payments');
-const mobilePaymentRoutes = require('./routes/mobilePayments');
-const cryptoPaymentRoutes = require('./routes/cryptoPayments');
-const authRoutes = require('./routes/auth');
+import productRoutes from './routes/products.js';
+import userRoutes from './routes/users.js';
+import orderRoutes from './routes/orders.js';
+import paymentRoutes from './routes/payments.js';
+import mobilePaymentRoutes from './routes/mobilePayments.js';
+import cryptoPaymentRoutes from './routes/cryptoPayments.js';
+import authRoutes from './routes/auth.js';
+
+// Configuration
+dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
@@ -106,6 +112,7 @@ app.get('*', (req, res) => {
 // Initialisation WebSocket
 const websocketService = new WebSocketService(server);
 
+// Démarrage du serveur
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
