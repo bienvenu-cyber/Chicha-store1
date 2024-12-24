@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { initializeSentry, sentryErrorHandler } from './src/config/sentry.js';
+import { logger, expressLogger } from './src/config/logger.js';
 
 // Configuration des chemins pour ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -18,11 +20,15 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
+// Initialiser Sentry
+const Sentry = initializeSentry(app);
+
 // Middlewares
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(expressLogger);
 
 // Importer les routes dynamiquement
 const routeFiles = [
@@ -106,12 +112,33 @@ async function connectToDatabase() {
     // Initialisation WebSocket
     const websocketService = new WebSocketService(server);
 
+    // Gestionnaire d'erreurs Sentry
+    sentryErrorHandler(app);
+
+    // Gestionnaire d'erreurs global
+    app.use((err, req, res, next) => {
+      // Log de l'erreur
+      logger.error('Unhandled Error', {
+        message: err.message,
+        stack: err.stack
+      });
+
+      // Capture de l'erreur dans Sentry
+      Sentry.captureException(err);
+
+      res.status(500).json({
+        error: 'Une erreur interne est survenue',
+        message: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    });
+
     // Démarrer le serveur
     server.listen(PORT, () => {
-      console.log(`Serveur démarré sur le port ${PORT}`);
+      logger.info(`🚀 Serveur démarré sur le port ${PORT}`);
+      console.log(`🚀 Serveur démarré sur le port ${PORT}`);
     });
   } catch (error) {
-    console.error('Erreur de connexion à MongoDB', error);
+    logger.error('Échec du démarrage du serveur', { error });
     process.exit(1);
   }
 }

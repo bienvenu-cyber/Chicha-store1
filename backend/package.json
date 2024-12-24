@@ -9,8 +9,12 @@
     "preinstall": "npm install mongodb@5.9.0",
     "install": "npm install",
     "start": "node --experimental-specifier-resolution=node server.js",
-    "dev": "node --experimental-specifier-resolution=node server.js",
-    "test": "jest"
+    "dev": "nodemon server.js",
+    "test": "jest",
+    "build": "babel src --out-dir dist",
+    "lint": "eslint .",
+    "migrate": "node scripts/migrate.js",
+    "monitor": "node scripts/system-monitor.js"
   },
   "imports": {
     "#routes/*": "./routes/*.js",
@@ -19,20 +23,25 @@
     "#models/*": "./models/*.js"
   },
   "dependencies": {
+    "@sentry/node": "^7.x",
+    "@sentry/profiling-node": "^1.x",
+    "winston": "^3.x",
+    "winston-daily-rotate-file": "^4.x",
+    "express": "^4.x",
+    "mongoose": "^6.x",
+    "dotenv": "^16.x",
     "bcrypt": "^5.1.1",
     "cors": "2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.21.2",
     "helmet": "7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^5.9.0",
-    "winston": "3.11.0"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.x",
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.7",
     "babel-node": "^0.0.1-security",
-    "jest": "29.7.0",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.x",
+    "jest": "^29.x",
+    "eslint": "^8.x"
   }
 }

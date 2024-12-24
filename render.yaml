@@ -1,10 +1,21 @@
 services:
   - type: web
-    name: chicha-store
+    name: chicha-store-backend
     env: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && node --experimental-specifier-resolution=node server.js
+    region: frankfurt  # Région proche de vous
+    plan: starter     # Plan gratuit
+    branch: main      # Branche de déploiement
+    buildCommand: |
+      cd backend
+      npm ci
+      npm run build
+    startCommand: |
+      cd backend
+      npm run migrate
+      npm start
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: NODE_VERSION
         value: 18.x
       - key: PORT
@@ -13,13 +24,53 @@ services:
         fromDatabase:
           name: chicha-store-db
           property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: SENTRY_DSN
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: true
+    scaling:
+      minInstances: 1
+      maxInstances: 2
+      targetCPUPercent: 75
+
+  - type: web
+    name: chicha-store-frontend
+    env: static
+    region: frankfurt
+    buildCommand: |
+      cd frontend
+      npm ci
+      npm run build
+    staticPublishPath: ./frontend/build
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+    autoDeploy: true
+
+  - type: background-worker
+    name: chicha-store-worker
+    env: node
+    buildCommand: |
+      cd backend
+      npm ci
+      npm run build-worker
+    startCommand: npm run start-worker
+    envVars:
+      - key: WORKER_CONCURRENCY
+        value: 2
 
 databases:
   - name: chicha-store-db
     plan: free
-    region: frankfurt  # Région européenne
-    ipAllowList: []  # Aucune restriction IP
+    region: frankfurt
+    ipAllowList: []
+    backupRetentionDays: 7
+
+previewDeployments:
+  autoDeploy: true
+  pullRequestPreviewsEnabled: true

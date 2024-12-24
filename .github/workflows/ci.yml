@@ -20,37 +20,34 @@ jobs:
         cache-dependency-path: |
           backend/package-lock.json
           frontend/package-lock.json
-    
+
     - name: Install Backend Dependencies
       working-directory: ./backend
       run: npm ci
-    
+
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm ci
-    
+
     - name: Lint Backend
       working-directory: ./backend
       run: npm run lint
-    
+
     - name: Lint Frontend
       working-directory: ./frontend
       run: npm run lint
-    
-    - name: Backend Tests
+
+    - name: Run Backend Tests
       working-directory: ./backend
       run: npm test
-      env:
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}
-    
-    - name: Frontend Tests
+
+    - name: Run Frontend Tests
       working-directory: ./frontend
       run: npm test
 
-  build-and-deploy:
+  build:
     needs: lint-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v3
     
@@ -58,43 +55,50 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 18.x
-    
+
     - name: Build Backend
       working-directory: ./backend
       run: npm run build
-    
+
     - name: Build Frontend
       working-directory: ./frontend
       run: npm run build
-    
-    - name: Deploy to Production
-      uses: appleboy/ssh-action@master
-      env:
-        HOST: ${{ secrets.SERVER_HOST }}
-        USERNAME: ${{ secrets.SERVER_USER }}
-        SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-      with:
-        host: "${{ env.HOST }}"
-        username: "${{ env.USERNAME }}"
-        key: "${{ env.SSH_KEY }}"
-        script: |
-          cd /path/to/chicha-store
-          git pull origin main
-          npm ci
-          npm run migrate
-          pm2 restart chicha-store-backend
-          pm2 restart chicha-store-frontend
 
-  notify:
-    needs: [build-and-deploy]
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
-    if: always()
+    if: github.ref == 'refs/heads/main'
     steps:
-    - name: Slack Notification
-      uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,commit,author,action,eventName,ref,workflow
-        webhook_url: "${{ secrets.SLACK_WEBHOOK }}"
+    - uses: actions/checkout@v3
+
+    - name: Deploy to Render
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      run: |
+        curl -X POST $RENDER_DEPLOY_HOOK
+
+  status-notification:
+    needs: [lint-and-test, build, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - name: GitHub Status Notification
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const fs = require('fs');
+          const workflowRun = await github.rest.actions.getWorkflowRun({
+            owner: context.repo.owner,
+            repo: context.repo.name,
+            run_id: context.runId
+          });
+
+          const status = workflowRun.data.conclusion;
+          const emoji = status === 'success' ? '✅' : '❌';
+          const message = `${emoji} Workflow ${context.workflow} ${status} for ${context.ref}`;
+
+          core.summary
+            .addHeading('Deployment Status')
+            .addRaw(message)
+            .write();
