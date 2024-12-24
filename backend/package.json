@@ -4,7 +4,7 @@
   "description": "Backend for Chicha Store",
   "main": "server.js",
   "scripts": {
-    "preinstall": "npm install express-rate-limit@latest",
+    "preinstall": "npm install mongoose@8.9.2 mongodb@6.3.0",
     "install": "npm install",
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -15,10 +15,10 @@
     "cors": "2.8.5",
     "dotenv": "16.3.1",
     "express": "^4.21.2",
-    "express-rate-limit": "7.1.5",
     "helmet": "7.1.0",
     "jsonwebtoken": "9.0.2",
-    "mongoose": "^8.9.2",
+    "mongodb": "6.3.0",
+    "mongoose": "8.9.2",
     "winston": "3.11.0"
   },
   "devDependencies": {
