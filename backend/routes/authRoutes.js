@@ -1,140 +1,118 @@
-const express = require('express');
-const AuthService = require('../services/authService');
-const AuthMiddleware = require('../middleware/authMiddleware');
+import express from 'express';
+import { MongoClient, ObjectId } from 'mongodb';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
 // Route d'inscription
 router.post('/register', async (req, res) => {
   try {
-    const userData = req.body;
-    const result = await AuthService.register(userData);
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(400).json({ 
-      message: 'Erreur d\'inscription', 
-      error: error.message 
+    const { username, email, password } = req.body;
+    const database = global.database;
+    const usersCollection = database.collection('users');
+    
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await usersCollection.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Utilisateur déjà existant' });
+    }
+    
+    // Hacher le mot de passe
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    
+    // Créer l'utilisateur
+    const newUser = {
+      username,
+      email,
+      password: hashedPassword,
+      createdAt: new Date(),
+      role: 'user' // Role par défaut
+    };
+    
+    const result = await usersCollection.insertOne(newUser);
+    
+    res.status(201).json({ 
+      message: 'Utilisateur enregistré avec succès',
+      userId: result.insertedId 
     });
+  } catch (error) {
+    console.error('Erreur lors de l\'inscription', error);
+    res.status(500).json({ message: 'Erreur du serveur', error: error.message });
   }
 });
 
 // Route de connexion
-router.post('/login', 
-  AuthMiddleware.rateLimitLogin,
-  AuthMiddleware.checkAccountIntegrity,
-  async (req, res) => {
-    try {
-      const credentials = req.body;
-      const result = await AuthService.login(credentials);
-      
-      if (result.twoFactorRequired) {
-        return res.status(206).json({
-          message: 'Authentification à deux facteurs requise',
-          userId: result.userId
-        });
-      }
-
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(401).json({ 
-        message: 'Échec de la connexion', 
-        error: error.message 
-      });
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const database = global.database;
+    const usersCollection = database.collection('users');
+    
+    // Trouver l'utilisateur
+    const user = await usersCollection.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Utilisateur non trouvé' });
     }
-});
-
-// Route de vérification 2FA
-router.post('/verify-2fa', async (req, res) => {
-  try {
-    const { userId, code } = req.body;
-    const result = await AuthService.verifyTwoFactor(userId, code);
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(401).json({ 
-      message: 'Vérification 2FA échouée', 
-      error: error.message 
+    
+    // Vérifier le mot de passe
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Mot de passe incorrect' });
+    }
+    
+    // Générer un token JWT
+    const token = jwt.sign(
+      { 
+        userId: user._id, 
+        email: user.email,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    
+    res.json({ 
+      token, 
+      userId: user._id,
+      username: user.username,
+      role: user.role
     });
-  }
-});
-
-// Route de réinitialisation de mot de passe
-router.post('/forgot-password', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const result = await AuthService.initiatePasswordReset(email);
-    res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ 
-      message: 'Erreur de réinitialisation de mot de passe', 
-      error: error.message 
-    });
+    console.error('Erreur lors de la connexion', error);
+    res.status(500).json({ message: 'Erreur du serveur', error: error.message });
   }
 });
 
 // Route de réinitialisation de mot de passe
 router.post('/reset-password', async (req, res) => {
   try {
-    const { token, newPassword } = req.body;
-    const result = await AuthService.resetPassword(token, newPassword);
-    res.status(200).json(result);
+    const { email, newPassword } = req.body;
+    const database = global.database;
+    const usersCollection = database.collection('users');
+    
+    // Trouver l'utilisateur
+    const user = await usersCollection.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Utilisateur non trouvé' });
+    }
+    
+    // Hacher le nouveau mot de passe
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    
+    // Mettre à jour le mot de passe
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { $set: { password: hashedPassword } }
+    );
+    
+    res.json({ message: 'Mot de passe réinitialisé avec succès' });
   } catch (error) {
-    res.status(400).json({ 
-      message: 'Échec de la réinitialisation de mot de passe', 
-      error: error.message 
-    });
+    console.error('Erreur de réinitialisation de mot de passe', error);
+    res.status(500).json({ message: 'Erreur du serveur', error: error.message });
   }
 });
 
-// Route d'activation de compte
-router.get('/activate/:token', async (req, res) => {
-  try {
-    const { token } = req.params;
-    const result = await AuthService.activateAccount(token);
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(400).json({ 
-      message: 'Activation du compte échouée', 
-      error: error.message 
-    });
-  }
-});
-
-// Route de profil utilisateur (protégée)
-router.get('/profile', 
-  AuthMiddleware.authenticateJWT,
-  async (req, res) => {
-    try {
-      const user = req.user;
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(500).json({ 
-        message: 'Erreur de récupération du profil', 
-        error: error.message 
-      });
-    }
-});
-
-// Route de mise à jour du profil (protégée)
-router.put('/profile', 
-  AuthMiddleware.authenticateJWT,
-  async (req, res) => {
-    try {
-      const userId = req.user._id;
-      const updateData = req.body;
-      
-      const updatedUser = await User.findByIdAndUpdate(
-        userId, 
-        updateData, 
-        { new: true }
-      );
-
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      res.status(400).json({ 
-        message: 'Mise à jour du profil échouée', 
-        error: error.message 
-      });
-    }
-});
-
-module.exports = router;
+export default router;
