@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -13,17 +14,6 @@ const __dirname = path.dirname(__filename);
 // Charger les variables d'environnement
 dotenv.config();
 
-// Importer les routes dynamiquement
-const routeFiles = [
-  'auth.js',
-  'products.js',
-  'users.js',
-  'orders.js',
-  'payments.js',
-  'mobilePayments.js',
-  'cryptoPayments.js',
-];
-
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
@@ -33,6 +23,17 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Importer les routes dynamiquement
+const routeFiles = [
+  'authRoutes',
+  'products',
+  'users',
+  'orders',
+  'payments',
+  'mobilePayments',
+  'cryptoPayments'
+];
 
 // Connexion à MongoDB
 async function connectToDatabase() {
@@ -45,16 +46,20 @@ async function connectToDatabase() {
     console.log('Connecté à MongoDB');
     
     // Stocker la connexion globalement
-    global.database = client.db(); // Utilise la base de données par défaut
+    global.database = client.db(process.env.DB_NAME);
     
     // Charger dynamiquement les routes
-    for (const routeFile of routeFiles) {
-      const routePath = path.join(__dirname, 'routes', `${routeFile}Routes.js`);
-      const { default: route } = await import(routePath);
-      
-      // Extraire le nom de la route à partir du nom du fichier
-      const routeName = routeFile;
-      app.use(`/api/${routeName}`, route);
+    for (const routeName of routeFiles) {
+      try {
+        const routePath = path.join(__dirname, 'routes', `${routeName}.js`);
+        const { default: route } = await import(routePath);
+        
+        // Extraire le nom de la route à partir du nom du fichier
+        const apiRouteName = routeName.replace('Routes', '');
+        app.use(`/api/${apiRouteName}`, route);
+      } catch (routeError) {
+        console.error(`Erreur de chargement de la route ${routeName}:`, routeError);
+      }
     }
     
     // Routes de recommandation
@@ -93,11 +98,11 @@ async function connectToDatabase() {
       }
     });
 
-    // Route pour le frontend
+    // Route par défaut
     app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, '../frontend/index.html'));
     });
-
+    
     // Initialisation WebSocket
     const websocketService = new WebSocketService(server);
 
