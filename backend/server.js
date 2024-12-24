@@ -1,7 +1,6 @@
 const express = require('express');
-// const rateLimit = require('express-rate-limit');
 const http = require('http');
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
@@ -22,30 +21,37 @@ const authRoutes = require('./routes/auth');
 const app = express();
 const server = http.createServer(app);
 
-// Rate Limiting
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100 // limit each IP to 100 requests per windowMs
-// });
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
-// app.use(limiter); // Apply rate limiting to all requests
 
 // Connexion à MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-})
-.then(() => console.log('Connecté à MongoDB'))
-.catch(err => {
-  console.error('Erreur de connexion MongoDB', err);
-  process.exit(1); // Quitter l'application en cas d'échec de connexion
-});
+const connectToDatabase = async () => {
+  try {
+    const client = new MongoClient(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000
+    });
+    
+    await client.connect();
+    console.log('Connecté à MongoDB');
+    
+    const database = client.db(); // Utilise la base de données par défaut
+    
+    // Stocker la connexion globalement si nécessaire
+    global.mongoClient = client;
+    global.database = database;
+    
+    return database;
+  } catch (error) {
+    console.error('Erreur de connexion MongoDB', error);
+    process.exit(1);
+  }
+};
+
+// Initialiser la connexion à la base de données
+connectToDatabase();
 
 // Routes
 app.use('/api/products', productRoutes);
