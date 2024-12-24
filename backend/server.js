@@ -1,119 +1,114 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
-import http from 'http';
 import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Services
-import WebSocketService from './services/websocketService.js';
-import recommendationService from './services/recommendationService.js';
-
-// Routes
-import productRoutes from './routes/products.js';
-import userRoutes from './routes/users.js';
-import orderRoutes from './routes/orders.js';
-import paymentRoutes from './routes/payments.js';
-import mobilePaymentRoutes from './routes/mobilePayments.js';
-import cryptoPaymentRoutes from './routes/cryptoPayments.js';
-import authRoutes from './routes/auth.js';
-
-// Configuration
-dotenv.config();
+// Configuration des chemins pour ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Charger les variables d'environnement
+dotenv.config();
+
+// Importer les routes dynamiquement
+const routeFiles = [
+  'auth.js',
+  'products.js',
+  'users.js',
+  'orders.js',
+  'payments.js',
+  'mobilePayments.js',
+  'cryptoPayments.js',
+];
+
 const app = express();
 const server = http.createServer(app);
+const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Middlewares
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Connexion à MongoDB
-const connectToDatabase = async () => {
+async function connectToDatabase() {
   try {
     const client = new MongoClient(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000
     });
-    
     await client.connect();
     console.log('Connecté à MongoDB');
     
-    const database = client.db(); // Utilise la base de données par défaut
+    // Stocker la connexion globalement
+    global.database = client.db(); // Utilise la base de données par défaut
     
-    // Stocker la connexion globalement si nécessaire
-    global.mongoClient = client;
-    global.database = database;
+    // Charger dynamiquement les routes
+    for (const routeFile of routeFiles) {
+      const routePath = path.join(__dirname, 'routes', `${routeFile}Routes.js`);
+      const { default: route } = await import(routePath);
+      
+      // Extraire le nom de la route à partir du nom du fichier
+      const routeName = routeFile;
+      app.use(`/api/${routeName}`, route);
+    }
     
-    return database;
+    // Routes de recommandation
+    app.post('/api/recommendations/personalized', async (req, res) => {
+      try {
+        const { userId, context } = req.body;
+        const recommendations = await recommendationService.getPersonalizedRecommendations(
+          userId, 
+          context
+        );
+        res.json(recommendations);
+      } catch (error) {
+        res.status(500).json({ error: 'Erreur de recommandation' });
+      }
+    });
+
+    app.get('/api/recommendations/related/:productId', async (req, res) => {
+      try {
+        const { productId } = req.params;
+        const relatedProducts = await recommendationService.getRelatedProducts(productId);
+        res.json(relatedProducts);
+      } catch (error) {
+        res.status(500).json({ error: 'Erreur de produits similaires' });
+      }
+    });
+
+    app.post('/api/recommendations/browsing', async (req, res) => {
+      try {
+        const { lastViewedProducts } = req.body;
+        const recommendations = await recommendationService.getBrowsingRecommendations(
+          lastViewedProducts
+        );
+        res.json(recommendations);
+      } catch (error) {
+        res.status(500).json({ error: 'Erreur de recommandations de navigation' });
+      }
+    });
+
+    // Route pour le frontend
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    });
+
+    // Initialisation WebSocket
+    const websocketService = new WebSocketService(server);
+
+    // Démarrer le serveur
+    server.listen(PORT, () => {
+      console.log(`Serveur démarré sur le port ${PORT}`);
+    });
   } catch (error) {
-    console.error('Erreur de connexion MongoDB', error);
+    console.error('Erreur de connexion à MongoDB', error);
     process.exit(1);
   }
-};
+}
 
-// Initialiser la connexion à la base de données
 connectToDatabase();
-
-// Routes
-app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/mobile-payments', mobilePaymentRoutes);
-app.use('/api/crypto-payments', cryptoPaymentRoutes);
-app.use('/api/auth', authRoutes);
-
-// Routes de recommandation
-app.post('/api/recommendations/personalized', async (req, res) => {
-  try {
-    const { userId, context } = req.body;
-    const recommendations = await recommendationService.getPersonalizedRecommendations(
-      userId, 
-      context
-    );
-    res.json(recommendations);
-  } catch (error) {
-    res.status(500).json({ error: 'Erreur de recommandation' });
-  }
-});
-
-app.get('/api/recommendations/related/:productId', async (req, res) => {
-  try {
-    const { productId } = req.params;
-    const relatedProducts = await recommendationService.getRelatedProducts(productId);
-    res.json(relatedProducts);
-  } catch (error) {
-    res.status(500).json({ error: 'Erreur de produits similaires' });
-  }
-});
-
-app.post('/api/recommendations/browsing', async (req, res) => {
-  try {
-    const { lastViewedProducts } = req.body;
-    const recommendations = await recommendationService.getBrowsingRecommendations(
-      lastViewedProducts
-    );
-    res.json(recommendations);
-  } catch (error) {
-    res.status(500).json({ error: 'Erreur de recommandations de navigation' });
-  }
-});
-
-// Route pour le frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
-
-// Initialisation WebSocket
-const websocketService = new WebSocketService(server);
-
-// Démarrage du serveur
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
-});
