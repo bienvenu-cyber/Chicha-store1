@@ -1,5 +1,5 @@
-const winston = require('winston');
-const Sentry = require('@sentry/node');
+import winston from 'winston';
+import Sentry from '@sentry/node';
 
 // Configuration de Sentry pour le monitoring des erreurs
 Sentry.init({
@@ -24,7 +24,7 @@ const logger = winston.createLogger({
   ]
 });
 
-class ErrorHandler {
+export default class ErrorHandler {
   // Gestion des erreurs de synchronisation publicitaire
   static handleAdsSyncError(error, context = {}) {
     // Enregistrement de l'erreur
@@ -122,4 +122,4 @@ class ErrorHandler {
   }
 }
 
-module.exports = ErrorHandler;
+export default ErrorHandler;

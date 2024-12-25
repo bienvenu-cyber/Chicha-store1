@@ -1,8 +1,9 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const paypal = require('paypal-rest-sdk');
-const coinbase = require('coinbase-commerce-node');
-const { Order } = require('../models/Order');
-const { User } = require('../models/User');
+import Stripe from 'stripe';
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+import paypal from 'paypal-rest-sdk';
+import coinbase from 'coinbase-commerce-node';
+import { Order } from '../models/Order.js.js';
+import { User } from '../models/User.js.js';
 
 // Configuration PayPal
 paypal.configure({
@@ -16,7 +17,7 @@ const Client = coinbase.Client;
 const Charge = coinbase.resources.Charge;
 Client.init(process.env.COINBASE_API_KEY);
 
-class MultiPaymentService {
+export default class MultiPaymentService {
   constructor() {
     this.supportedMethods = [
       'credit_card',
@@ -201,4 +202,4 @@ class MultiPaymentService {
   }
 }
 
-module.exports = new MultiPaymentService();
+export default new MultiPaymentService();

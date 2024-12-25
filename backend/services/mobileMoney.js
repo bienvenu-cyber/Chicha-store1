@@ -1,7 +1,7 @@
-const axios = require('axios');
-const { Order } = require('../models/Order');
+import axios from 'axios';
+import { Order } from '../models/Order.js.js';
 
-class MobileMoneyService {
+export default class MobileMoneyService {
   constructor() {
     // Configurations pour les opérateurs mobile money d'Afrique de l'Ouest
     this.providers = {
@@ -471,4 +471,4 @@ class MobileMoneyService {
   }
 }
 
-module.exports = new MobileMoneyService();
+export default new MobileMoneyService();

@@ -45,7 +45,24 @@ export const fetchProducts = async (
     return products;
   } catch (error) {
     console.error('Erreur lors de la récupération des produits', error);
-    return [];
+    // Ajout d'une gestion d'erreur plus robuste
+    if (axios.isAxiosError(error)) {
+      // Gestion spécifique des erreurs Axios
+      if (error.response) {
+        // La requête a été faite et le serveur a répondu avec un code d'état
+        // qui sort de la plage de 2xx
+        throw new Error(`Erreur serveur : ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        throw new Error('Aucune réponse reçue du serveur');
+      } else {
+        // Quelque chose s'est passé lors de la configuration de la requête
+        throw new Error('Erreur de configuration de la requête');
+      }
+    }
+    
+    // Gestion des erreurs génériques
+    throw new Error('Erreur inattendue lors de la récupération des produits');
   }
 };
 
@@ -74,7 +91,24 @@ export const fetchProductById = async (
     return product;
   } catch (error) {
     console.error(`Erreur lors de la récupération du produit ${id}`, error);
-    return null;
+    // Ajout d'une gestion d'erreur plus robuste
+    if (axios.isAxiosError(error)) {
+      // Gestion spécifique des erreurs Axios
+      if (error.response) {
+        // La requête a été faite et le serveur a répondu avec un code d'état
+        // qui sort de la plage de 2xx
+        throw new Error(`Erreur serveur : ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        throw new Error('Aucune réponse reçue du serveur');
+      } else {
+        // Quelque chose s'est passé lors de la configuration de la requête
+        throw new Error('Erreur de configuration de la requête');
+      }
+    }
+    
+    // Gestion des erreurs génériques
+    throw new Error(`Erreur inattendue lors de la récupération du produit ${id}`);
   }
 };
 
@@ -105,6 +139,23 @@ export const searchProducts = async (
     return products;
   } catch (error) {
     console.error('Erreur lors de la recherche de produits', error);
-    return [];
+    // Ajout d'une gestion d'erreur plus robuste
+    if (axios.isAxiosError(error)) {
+      // Gestion spécifique des erreurs Axios
+      if (error.response) {
+        // La requête a été faite et le serveur a répondu avec un code d'état
+        // qui sort de la plage de 2xx
+        throw new Error(`Erreur serveur : ${error.response.status} - ${error.response.data}`);
+      } else if (error.request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        throw new Error('Aucune réponse reçue du serveur');
+      } else {
+        // Quelque chose s'est passé lors de la configuration de la requête
+        throw new Error('Erreur de configuration de la requête');
+      }
+    }
+    
+    // Gestion des erreurs génériques
+    throw new Error('Erreur inattendue lors de la recherche de produits');
   }
 };

@@ -1,4 +1,4 @@
-name: CI/CD Pipeline Chicha Store
+name: Chicha Store - CI/CD Pipeline
 
 on:
   push:
@@ -6,16 +6,20 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+env:
+  NODE_VERSION: 18.x
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
-    - name: Use Node.js 18.x
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
         cache-dependency-path: |
           backend/package-lock.json
@@ -40,21 +44,32 @@ jobs:
     - name: Run Backend Tests
       working-directory: ./backend
       run: npm test
+      env:
+        TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
 
     - name: Run Frontend Tests
       working-directory: ./frontend
       run: npm test
 
-  build:
+    - name: Check Test Coverage
+      run: |
+        cd backend
+        npm run test:coverage
+        cd ../frontend
+        npm run test:coverage
+
+    - name: Security Scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: test
+
+  build-and-deploy:
     needs: lint-and-test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Use Node.js 18.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
 
     - name: Build Backend
       working-directory: ./backend
@@ -64,41 +79,28 @@ jobs:
       working-directory: ./frontend
       run: npm run build
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Deploy to Render
-      env:
-        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+    - name: Docker Build and Push
       run: |
-        curl -X POST $RENDER_DEPLOY_HOOK
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker build -t chichastore/backend:${{ github.sha }} ./backend
+        docker build -t chichastore/frontend:${{ github.sha }} ./frontend
+        docker push chichastore/backend:${{ github.sha }}
+        docker push chichastore/frontend:${{ github.sha }}
 
-  status-notification:
-    needs: [lint-and-test, build, deploy]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-    - name: GitHub Status Notification
-      uses: actions/github-script@v6
+    - name: Deploy to Production
+      if: github.ref == 'refs/heads/main'
+      run: |
+        ssh ${{ secrets.PRODUCTION_SERVER }} "
+          docker pull chichastore/backend:${{ github.sha }}
+          docker pull chichastore/frontend:${{ github.sha }}
+          docker-compose -f docker-compose.production.yml up -d
+        "
+
+    - name: Notify Deployment
+      uses: 8398a7/action-slack@v3
+      if: always()
       with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          const fs = require('fs');
-          const workflowRun = await github.rest.actions.getWorkflowRun({
-            owner: context.repo.owner,
-            repo: context.repo.name,
-            run_id: context.runId
-          });
-
-          const status = workflowRun.data.conclusion;
-          const emoji = status === 'success' ? '✅' : '❌';
-          const message = `${emoji} Workflow ${context.workflow} ${status} for ${context.ref}`;
-
-          core.summary
-            .addHeading('Deployment Status')
-            .addRaw(message)
-            .write();
+        status: ${{ job.status }}
+        text: Deployment result for Chicha Store
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

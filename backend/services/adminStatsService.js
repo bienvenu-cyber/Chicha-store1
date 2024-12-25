@@ -1,10 +1,10 @@
-const Admin = require('../models/Admin');
-const User = require('../models/User');
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const ChichaMix = require('../models/ChichaMix');
+import Admin from '../models/Admin.js.js';
+import User from '../models/User.js.js';
+import Order from '../models/Order.js.js';
+import Product from '../models/Product.js.js';
+import ChichaMix from '../models/ChichaMix.js.js';
 
-class AdminStatsService {
+export default class AdminStatsService {
   // Récupération des statistiques du tableau de bord
   async getDashboardStats(adminId) {
     try {
@@ -159,4 +159,4 @@ class AdminStatsService {
   }
 }
 
-module.exports = new AdminStatsService();
+export default new AdminStatsService();

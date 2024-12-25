@@ -1,8 +1,8 @@
-const Newsletter = require('../models/Newsletter');
-const crypto = require('crypto');
-const { sendEmail } = require('./emailService');
+import Newsletter from '../models/Newsletter.js.js';
+import crypto from 'crypto';
+import { sendEmail } from './emailService.js.js.js';
 
-class NewsletterService {
+export default class NewsletterService {
   async subscribeEmail(email, source = 'website') {
     try {
       // Générer un token unique pour désabonnement
@@ -72,7 +72,7 @@ class NewsletterService {
     }
   }
 
-  private determineSegments() {
+  determineSegments() {
     // Logique de segmentation dynamique
     const segments = ['new_users'];
 
@@ -100,4 +100,4 @@ class NewsletterService {
   }
 }
 
-module.exports = new NewsletterService();
+export default new NewsletterService();

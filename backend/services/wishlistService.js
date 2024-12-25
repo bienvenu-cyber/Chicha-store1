@@ -1,7 +1,7 @@
-const Wishlist = require('../models/Wishlist');
-const Product = require('../models/Product');
+import Wishlist from '../models/Wishlist.js.js';
+import Product from '../models/Product.js.js';
 
-class WishlistService {
+export default class WishlistService {
   async addToWishlist(userId, productId) {
     try {
       // Vérifier si le produit existe
@@ -91,4 +91,4 @@ class WishlistService {
   }
 }
 
-module.exports = new WishlistService();
+export default new WishlistService();

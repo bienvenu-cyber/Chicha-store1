@@ -1,8 +1,4 @@
-const mongoose = require('mongoose');
-const MixService = require('../services/mixService');
-const ChichaMix = require('../models/ChichaMix');
-const User = require('../models/User');
-
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
 describe('MixService', () => {
   let testUser;
 

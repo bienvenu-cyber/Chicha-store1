@@ -1,7 +1,7 @@
-const axios = require('axios');
-const { ValidationError } = require('../utils/errors');
+import axios from 'axios';
+import { ValidationError } from '../utils/errors.js.js';
 
-class PaymentValidationService {
+export default class PaymentValidationService {
   // Vérification de fraude multi-niveau
   static async comprehensiveFraudCheck(transaction) {
     const checks = [
@@ -120,4 +120,4 @@ class PaymentValidationService {
   static async checkBankAccountBlacklist(bankAccount) { /* ... */ }
 }
 
-module.exports = PaymentValidationService;
+export default PaymentValidationService;

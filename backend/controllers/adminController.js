@@ -1,5 +1,5 @@
-const AdminAuthService = require('../services/adminAuthService');
-const AdminStatsService = require('../services/adminStatsService');
+import AdminAuthService from '../services/adminAuthService.js.js';
+import AdminStatsService from '../services/adminStatsService.js.js';
 
 class AdminController {
   // Inscription admin
@@ -152,4 +152,4 @@ class AdminController {
   }
 }
 
-module.exports = new AdminController();
+export default new AdminController();

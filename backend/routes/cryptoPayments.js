@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const CryptoPayment = require('../models/CryptoPayment');
-const Order = require('../models/Order');
-const { auth } = require('../middleware/auth');
+import CryptoPayment from '../models/CryptoPayment.js.js';
+import Order from '../models/Order.js.js';
+import { auth } from '../middleware/auth.js.js';
 
 // Service pour obtenir les taux de change (à remplacer par une vraie API)
 const getCryptoRate = async (crypto) => {
@@ -111,4 +111,4 @@ router.get('/status/:walletAddress', auth, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

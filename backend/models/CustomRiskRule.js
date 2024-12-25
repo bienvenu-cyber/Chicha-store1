@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const CustomRiskRuleSchema = new mongoose.Schema({
   name: {
@@ -118,4 +118,4 @@ CustomRiskRuleSchema.statics.getTransactionValue = (transaction, field) => {
   return fieldMap[field];
 };
 
-module.exports = mongoose.model('CustomRiskRule', CustomRiskRuleSchema);
+export default mongoose.model('CustomRiskRule', CustomRiskRuleSchema);

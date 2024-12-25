@@ -1,9 +1,9 @@
-const tf = require('@tensorflow/tfjs-node');
-const ChichaMix = require('../models/ChichaMix');
-const User = require('../models/User');
-const Product = require('../models/Product');
+import tf from '@tensorflow/tfjs-node';
+import ChichaMix from '../models/ChichaMix.js.js';
+import User from '../models/User.js.js';
+import Product from '../models/Product.js.js';
 
-class RecommendationEngine {
+export default class RecommendationEngine {
   constructor() {
     this.model = null;
     this.initializeModel();
@@ -95,4 +95,4 @@ class RecommendationEngine {
   }
 }
 
-module.exports = new RecommendationEngine();
+export default new RecommendationEngine();

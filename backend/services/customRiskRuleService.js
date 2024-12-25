@@ -1,7 +1,7 @@
-const CustomRiskRule = require('../models/CustomRiskRule');
-const RiskRulesEngine = require('./riskRulesEngine');
+import CustomRiskRule from '../models/CustomRiskRule.js.js';
+import RiskRulesEngine from './riskRulesEngine.js.js.js';
 
-class CustomRiskRuleService {
+export default class CustomRiskRuleService {
   // Créer une nouvelle règle de risque personnalisée
   async createCustomRule(ruleData, createdBy) {
     try {
@@ -144,4 +144,4 @@ class CustomRiskRuleService {
   }
 }
 
-module.exports = new CustomRiskRuleService();
+export default new CustomRiskRuleService();

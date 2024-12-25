@@ -1,8 +1,8 @@
-const tf = require('@tensorflow/tfjs-node');
-const User = require('../models/User');
-const ChichaMix = require('../models/ChichaMix');
+import tf from '@tensorflow/tfjs-node';
+import User from '../models/User.js.js';
+import ChichaMix from '../models/ChichaMix.js.js';
 
-class BehavioralAIService {
+export default class BehavioralAIService {
   constructor() {
     this.behaviorModel = null;
     this.initializeBehaviorModel();
@@ -163,4 +163,4 @@ class BehavioralAIService {
   }
 }
 
-module.exports = new BehavioralAIService();
+export default new BehavioralAIService();

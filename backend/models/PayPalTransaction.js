@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const PayPalTransactionSchema = new mongoose.Schema({
   order: {
@@ -68,4 +68,4 @@ PayPalTransactionSchema.statics.createTransaction = async function(
   return await transaction.save();
 };
 
-module.exports = mongoose.model('PayPalTransaction', PayPalTransactionSchema);
+export default mongoose.model('PayPalTransaction', PayPalTransactionSchema);

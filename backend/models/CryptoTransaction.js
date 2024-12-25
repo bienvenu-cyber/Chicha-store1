@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const CryptoTransactionSchema = new mongoose.Schema({
   order: {
@@ -81,4 +81,4 @@ CryptoTransactionSchema.statics.createTransaction = async function(
   return await transaction.save();
 };
 
-module.exports = mongoose.model('CryptoTransaction', CryptoTransactionSchema);
+export default mongoose.model('CryptoTransaction', CryptoTransactionSchema);

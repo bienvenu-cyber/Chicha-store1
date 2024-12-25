@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const SepaTransactionSchema = new mongoose.Schema({
   order: {
@@ -84,4 +84,4 @@ SepaTransactionSchema.statics.createTransaction = async function(
   return await transaction.save();
 };
 
-module.exports = mongoose.model('SepaTransaction', SepaTransactionSchema);
+export default mongoose.model('SepaTransaction', SepaTransactionSchema);

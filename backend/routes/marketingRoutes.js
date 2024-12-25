@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const newsletterService = require('../services/newsletterService');
-const loyaltyService = require('../services/loyaltyService');
-const remarketingService = require('../services/remarketingService');
-const { authenticateUser } = require('../middleware/authMiddleware');
+import newsletterService from '../services/newsletterService.js.js';
+import loyaltyService from '../services/loyaltyService.js.js';
+import remarketingService from '../services/remarketingService.js.js';
+import { authenticateUser } from '../middleware/authMiddleware.js.js';
 
 // Newsletter
 router.post('/newsletter/subscribe', async (req, res) => {
@@ -76,4 +76,4 @@ router.post('/remarketing/send-email', authenticateUser, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

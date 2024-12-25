@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const User = require('../models/User');
-const ChichaMix = require('../models/ChichaMix');
-const CommunityPost = require('../models/CommunityPost');
+import mongoose from 'mongoose';
+import User from '../models/User.js.js';
+import ChichaMix from '../models/ChichaMix.js.js';
+import CommunityPost from '../models/CommunityPost.js.js';
 
-class CommunityEngagementService {
+export default class CommunityEngagementService {
   async createCommunityPost(userId, content, type = 'mix_share') {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -179,4 +179,4 @@ class CommunityEngagementService {
   }
 }
 
-module.exports = new CommunityEngagementService();
+export default new CommunityEngagementService();

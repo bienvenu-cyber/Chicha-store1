@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ingredientSchema = new mongoose.Schema({
   name: { 
@@ -59,4 +59,4 @@ const chichaMixSchema = new mongoose.Schema({
 chichaMixSchema.index({ user: 1, createdAt: -1 });
 chichaMixSchema.index({ isPublic: 1, likes: -1 });
 
-module.exports = mongoose.model('ChichaMix', chichaMixSchema);
+export default mongoose.model('ChichaMix', chichaMixSchema);

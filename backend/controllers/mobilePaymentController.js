@@ -1,6 +1,6 @@
-const MobileMoneyService = require('../services/mobileMoney');
-const OrderService = require('../services/orderService');
-const { Order } = require('../models/Order');
+import MobileMoneyService from '../services/mobileMoney.js.js';
+import OrderService from '../services/orderService.js.js';
+import { Order } from '../models/Order.js.js';
 
 class MobilePaymentController {
   // Liste des opérateurs disponibles
@@ -205,4 +205,4 @@ class MobilePaymentController {
   }
 }
 
-module.exports = new MobilePaymentController();
+export default new MobilePaymentController();

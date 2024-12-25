@@ -1,9 +1,6 @@
-const mongoose = require('mongoose');
-const SubscriptionService = require('../services/subscriptionService');
-const Subscription = require('../models/Subscription');
-const Product = require('../models/Product');
-const User = require('../models/User');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";import User from '../models/User.js.js.js.js';
+import Stripe from 'stripe';
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 jest.mock('stripe', () => {
   return jest.fn().mockImplementation(() => ({

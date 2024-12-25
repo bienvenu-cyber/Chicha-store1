@@ -1,7 +1,7 @@
-const ChichaMix = require('../models/ChichaMix');
-const User = require('../models/User');
+import ChichaMix from '../models/ChichaMix.js.js';
+import User from '../models/User.js.js';
 
-class MixService {
+export default class MixService {
   async createPersonalMix(userId, mixData) {
     try {
       const mix = new ChichaMix({
@@ -119,4 +119,4 @@ class MixService {
   }
 }
 
-module.exports = new MixService();
+export default new MixService();

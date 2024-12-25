@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const SecurityLogSchema = new mongoose.Schema({
   type: {
@@ -92,4 +92,4 @@ SecurityLogSchema.statics.checkSuspiciousActivity = async function(userId) {
   };
 };
 
-module.exports = mongoose.model('SecurityLog', SecurityLogSchema);
+export default mongoose.model('SecurityLog', SecurityLogSchema);

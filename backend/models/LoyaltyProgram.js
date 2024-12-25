@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const crypto = require('crypto');
+import mongoose from 'mongoose';
+import crypto from 'crypto';
 
 const rewardSchema = new mongoose.Schema({
   name: {
@@ -181,4 +181,4 @@ loyaltyProgramSchema.methods.unlockAchievement = function(achievement) {
 const LoyaltyProgram = mongoose.model('LoyaltyProgram', loyaltyProgramSchema);
 const Reward = mongoose.model('Reward', rewardSchema);
 
-module.exports = { LoyaltyProgram, Reward };
+export default { LoyaltyProgram, Reward };

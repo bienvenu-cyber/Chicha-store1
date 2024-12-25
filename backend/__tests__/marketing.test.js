@@ -1,8 +1,4 @@
-const mongoose = require('mongoose');
-const NewsletterService = require('../services/newsletterService');
-const LoyaltyService = require('../services/loyaltyService');
-const RemarketingService = require('../services/remarketingService');
-
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
 describe('Services Marketing', () => {
   let testUser;
 

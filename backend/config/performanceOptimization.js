@@ -1,7 +1,7 @@
 npm install prom-client @tensorflow/tfjs-node
-npm install -D @types/nodeconst mongoose = require('mongoose');
-const Redis = require('ioredis');
-const { createClient } = require('redis');
+npm install -D @types/nodeimport mongoose from 'mongoose';
+import Redis from 'ioredis';
+import { createClient } from 'redis';
 
 class PerformanceOptimizer {
   constructor() {
@@ -128,4 +128,4 @@ class PerformanceOptimizer {
   }
 }
 
-module.exports = new PerformanceOptimizer();
+export default new PerformanceOptimizer();

@@ -1,7 +1,7 @@
-const axios = require('axios');
-const crypto = require('crypto');
+import axios from 'axios';
+import crypto from 'crypto';
 
-class PaymentIntegrationService {
+export default class PaymentIntegrationService {
   // Intégration de portefeuille électronique
   static async processDigitalWalletPayment(order, walletDetails) {
     const supportedWallets = {
@@ -176,4 +176,4 @@ class PaymentIntegrationService {
   }
 }
 
-module.exports = PaymentIntegrationService;
+export default PaymentIntegrationService;

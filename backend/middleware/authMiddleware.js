@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models/User');
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User.js.js';
 
-class AuthMiddleware {
+export default class AuthMiddleware {
   // Vérification du token
   static async authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
@@ -143,4 +143,4 @@ class AuthMiddleware {
   }
 }
 
-module.exports = AuthMiddleware;
+export default AuthMiddleware;

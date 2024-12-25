@@ -1,8 +1,8 @@
-const express = require('express');
-const adminController = require('../controllers/adminController');
-const authMiddleware = require('../middleware/authMiddleware');
-const permissionMiddleware = require('../middleware/permissionMiddleware');
-const validationMiddleware = require('../middleware/validationMiddleware');
+import express from 'express';
+import adminController from '../controllers/adminController.js.js';
+import authMiddleware from '../middleware/authMiddleware.js.js';
+import permissionMiddleware from '../middleware/permissionMiddleware.js.js';
+import validationMiddleware from '../middleware/validationMiddleware.js.js';
 
 const router = express.Router();
 
@@ -79,4 +79,4 @@ router.get('/finance',
   adminController.getFinanceData
 );
 
-module.exports = router;
+export default router;

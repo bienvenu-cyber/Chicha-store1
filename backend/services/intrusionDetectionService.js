@@ -1,9 +1,9 @@
-const { spawn } = require('child_process');
+import { spawn } from 'child_process';
 const fs = require('fs').promises;
-const path = require('path');
-const axios = require('axios');
+import path from 'path';
+import axios from 'axios';
 
-class IntrusionDetectionService {
+export default class IntrusionDetectionService {
   constructor() {
     this.snortRules = [];
     this.suricataRules = [];
@@ -167,4 +167,4 @@ class IntrusionDetectionService {
   logHoneypotActivity(service, data) { /* ... */ }
 }
 
-module.exports = new IntrusionDetectionService();
+export default new IntrusionDetectionService();

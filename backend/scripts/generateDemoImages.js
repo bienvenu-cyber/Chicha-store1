@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
-const path = require('path');
-const sharp = require('sharp');
+import path from 'path';
+import sharp from 'sharp';
 
 // Configurations des images
 const imageConfigs = [

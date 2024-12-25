@@ -1,9 +1,9 @@
-const RiskRulesEngine = require('../services/riskRulesEngine');
-const CustomRiskRuleService = require('../services/customRiskRuleService');
-const { TransactionRisk } = require('../models/TransactionRisk');
-const { Notification } = require('../models/Notification');
+import RiskRulesEngine from '../services/riskRulesEngine.js.js';
+import CustomRiskRuleService from '../services/customRiskRuleService.js.js';
+import { TransactionRisk } from '../models/TransactionRisk.js.js';
+import { Notification } from '../models/Notification.js.js';
 
-class RiskManagementMiddleware {
+export default class RiskManagementMiddleware {
   // Middleware principal de gestion des risques
   static async assessTransactionRisk(req, res, next) {
     try {
@@ -177,4 +177,4 @@ class RiskManagementMiddleware {
   }
 }
 
-module.exports = RiskManagementMiddleware;
+export default RiskManagementMiddleware;

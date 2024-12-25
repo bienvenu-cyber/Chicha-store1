@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const subscriptionSchema = new mongoose.Schema({
   user: {
@@ -62,4 +62,4 @@ subscriptionSchema.pre('save', function(next) {
 subscriptionSchema.index({ user: 1, status: 1 });
 subscriptionSchema.index({ nextDeliveryDate: 1 });
 
-module.exports = mongoose.model('Subscription', subscriptionSchema);
+export default mongoose.model('Subscription', subscriptionSchema);

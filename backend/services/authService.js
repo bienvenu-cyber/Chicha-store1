@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const User = require('../models/User');
-const config = require('../config/config');
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import User from '../models/User.js.js';
+import config from '../config/config.js.js';
 
-class AuthService {
+export default class AuthService {
   constructor() {
     this.JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
   }
@@ -208,4 +208,4 @@ class AuthService {
   }
 }
 
-module.exports = new AuthService();
+export default new AuthService();

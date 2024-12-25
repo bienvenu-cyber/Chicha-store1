@@ -1,9 +1,9 @@
-const tf = require('@tensorflow/tfjs-node');
-const mongoose = require('mongoose');
-const ChichaMix = require('../models/ChichaMix');
-const User = require('../models/User');
+import tf from '@tensorflow/tfjs-node';
+import mongoose from 'mongoose';
+import ChichaMix from '../models/ChichaMix.js.js';
+import User from '../models/User.js.js';
 
-class AIRecommendationEngine {
+export default class AIRecommendationEngine {
   constructor() {
     this.model = null;
     this.initializeDeepLearningModel();
@@ -180,4 +180,4 @@ class AIRecommendationEngine {
   }
 }
 
-module.exports = new AIRecommendationEngine();
+export default new AIRecommendationEngine();

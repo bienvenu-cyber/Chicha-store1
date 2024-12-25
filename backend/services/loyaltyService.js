@@ -1,9 +1,9 @@
-const { LoyaltyProgram, Reward } = require('../models/LoyaltyProgram');
-const User = require('../models/User');
-const crypto = require('crypto');
-const mongoose = require('mongoose');
+import { LoyaltyProgram, Reward } from '../models/LoyaltyProgram.js.js';
+import User from '../models/User.js.js';
+import crypto from 'crypto';
+import mongoose from 'mongoose';
 
-class LoyaltyService {
+export default class LoyaltyService {
   async initializeLoyaltyProgram(userId) {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -212,4 +212,4 @@ class LoyaltyService {
   }
 }
 
-module.exports = new LoyaltyService();
+export default new LoyaltyService();

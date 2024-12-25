@@ -1,8 +1,8 @@
-const { Product } = require('../models/Product');
-const { User } = require('../models/User');
-const { Order } = require('../models/Order');
+import { Product } from '../models/Product.js.js';
+import { User } from '../models/User.js.js';
+import { Order } from '../models/Order.js.js';
 
-class RecommendationService {
+export default class RecommendationService {
   async getPersonalizedRecommendations(userId, context = {}) {
     try {
       const user = await User.findById(userId);
@@ -101,4 +101,4 @@ class RecommendationService {
   }
 }
 
-module.exports = new RecommendationService();
+export default new RecommendationService();

@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const adsPlatformService = require('../services/adsPlatformService');
-const { authenticateUser } = require('../middleware/authMiddleware');
+import adsPlatformService from '../services/adsPlatformService.js.js';
+import { authenticateUser } from '../middleware/authMiddleware.js.js';
 
 // Créer une audience de remarketing
 router.post('/remarketing/audience', authenticateUser, async (req, res) => {
@@ -36,4 +36,4 @@ router.post('/conversion/track', authenticateUser, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

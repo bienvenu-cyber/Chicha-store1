@@ -1,9 +1,9 @@
-const nodemailer = require('nodemailer');
-const handlebars = require('handlebars');
+import nodemailer from 'nodemailer';
+import handlebars from 'handlebars';
 const fs = require('fs').promises;
-const path = require('path');
+import path from 'path';
 
-class EmailNotificationService {
+export default class EmailNotificationService {
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -145,4 +145,4 @@ class EmailNotificationService {
   }
 }
 
-module.exports = new EmailNotificationService();
+export default new EmailNotificationService();

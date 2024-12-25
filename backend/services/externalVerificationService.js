@@ -1,7 +1,7 @@
-const axios = require('axios');
-const { TransactionRisk } = require('../models/TransactionRisk');
+import axios from 'axios';
+import { TransactionRisk } from '../models/TransactionRisk.js.js';
 
-class ExternalVerificationService {
+export default class ExternalVerificationService {
   // Services de vérification externes
   static async runComprehensiveVerification(transaction) {
     const verificationResults = await Promise.all([
@@ -175,4 +175,4 @@ class ExternalVerificationService {
   }
 }
 
-module.exports = ExternalVerificationService;
+export default ExternalVerificationService;

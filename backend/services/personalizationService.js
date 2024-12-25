@@ -1,7 +1,7 @@
-const User = require('../models/User');
-const Product = require('../models/Product');
+import User from '../models/User.js.js';
+import Product from '../models/Product.js.js';
 
-class PersonalizationService {
+export default class PersonalizationService {
     // Profil de préférences utilisateur
     async createUserPreferenceProfile(userId) {
         try {
@@ -125,4 +125,4 @@ class PersonalizationService {
     }
 }
 
-module.exports = new PersonalizationService();
+export default new PersonalizationService();

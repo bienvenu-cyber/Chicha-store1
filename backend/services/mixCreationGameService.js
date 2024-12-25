@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const ChichaMix = require('../models/ChichaMix');
-const User = require('../models/User');
-const LoyaltyProgram = require('../models/LoyaltyProgram');
+import mongoose from 'mongoose';
+import ChichaMix from '../models/ChichaMix.js.js';
+import User from '../models/User.js.js';
+import LoyaltyProgram from '../models/LoyaltyProgram.js.js';
 
-class MixCreationGameService {
+export default class MixCreationGameService {
   async startMixCreationChallenge(userId) {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -161,4 +161,4 @@ class MixCreationGameService {
   }
 }
 
-module.exports = new MixCreationGameService();
+export default new MixCreationGameService();

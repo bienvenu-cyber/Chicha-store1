@@ -1,9 +1,9 @@
-const socketIo = require('socket.io');
-const jwt = require('jsonwebtoken');
-const { User } = require('../models/User');
-const { Product } = require('../models/Product');
+import socketIo from 'socket.io';
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User.js.js';
+import { Product } from '../models/Product.js.js';
 
-class WebSocketService {
+export default class WebSocketService {
   constructor(server) {
     this.io = socketIo(server, {
       cors: {
@@ -162,4 +162,4 @@ class WebSocketService {
   }
 }
 
-module.exports = WebSocketService;
+export default WebSocketService;

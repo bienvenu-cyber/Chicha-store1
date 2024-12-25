@@ -1,10 +1,10 @@
-const crypto = require('crypto');
-const { promisify } = require('util');
-const scrypt = require('scrypt-js');
-const argon2 = require('argon2');
-const NodeVault = require('node-vault');
+import crypto from 'crypto';
+import { promisify } from 'util';
+import scrypt from 'scrypt-js';
+import argon2 from 'argon2';
+import NodeVault from 'node-vault';
 
-class CryptographyService {
+export default class CryptographyService {
   constructor() {
     // Configuration du coffre-fort de clés
     this.vault = NodeVault({
@@ -167,4 +167,4 @@ class CryptographyService {
   }
 }
 
-module.exports = new CryptographyService();
+export default new CryptographyService();

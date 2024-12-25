@@ -1,9 +1,9 @@
 const fs = require('fs').promises;
-const path = require('path');
-const crypto = require('crypto');
-const { performance } = require('perf_hooks');
+import path from 'path';
+import crypto from 'crypto';
+import { performance } from 'perf_hooks';
 
-class ComplianceAuditService {
+export default class ComplianceAuditService {
   constructor() {
     this.auditLog = [];
     this.complianceRules = {
@@ -206,4 +206,4 @@ class ComplianceAuditService {
   async updateUserData(userId, anonymizedData) { /* ... */ }
 }
 
-module.exports = new ComplianceAuditService();
+export default new ComplianceAuditService();

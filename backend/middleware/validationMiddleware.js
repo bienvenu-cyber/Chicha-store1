@@ -1,6 +1,6 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from 'express-validator';
 
-class ValidationMiddleware {
+export default class ValidationMiddleware {
   // Validation de l'inscription
   static validateRegistration() {
     return [
@@ -142,4 +142,4 @@ class ValidationMiddleware {
   }
 }
 
-module.exports = ValidationMiddleware;
+export default ValidationMiddleware;

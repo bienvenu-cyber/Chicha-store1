@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const Product = require('../models/Product');
+import mongoose from 'mongoose';
+import Product from '../models/Product.js.js';
 const fs = require('fs').promises;
-const path = require('path');
+import path from 'path';
 
 const productData = [
     {

@@ -1,8 +1,8 @@
-const ExternalVerificationService = require('../services/externalVerificationService');
-const CountryPaymentService = require('../services/countryPaymentService');
-const { TransactionRisk } = require('../models/TransactionRisk');
+import ExternalVerificationService from '../services/externalVerificationService.js.js';
+import CountryPaymentService from '../services/countryPaymentService.js.js';
+import { TransactionRisk } from '../models/TransactionRisk.js.js';
 
-class PaymentValidationMiddleware {
+export default class PaymentValidationMiddleware {
   // Middleware principal de validation de paiement
   static async validatePayment(req, res, next) {
     try {
@@ -179,4 +179,4 @@ class PaymentValidationMiddleware {
   }
 }
 
-module.exports = PaymentValidationMiddleware;
+export default PaymentValidationMiddleware;

@@ -1,4 +1,4 @@
-class PermissionMiddleware {
+export default class PermissionMiddleware {
   // Vérification du rôle SuperAdmin
   requireSuperAdminRole(req, res, next) {
     if (req.user.role !== 'SuperAdmin') {
@@ -102,4 +102,4 @@ class PermissionMiddleware {
   }
 }
 
-module.exports = new PermissionMiddleware();
+export default new PermissionMiddleware();

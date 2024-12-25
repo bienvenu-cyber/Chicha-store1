@@ -1,7 +1,7 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 const fs = require('fs').promises;
-const path = require('path');
+import path from 'path';
 
 class ProductImporter {
     constructor() {

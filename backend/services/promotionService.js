@@ -1,7 +1,7 @@
-const Promotion = require('../models/Promotion');
-const moment = require('moment');
+import Promotion from '../models/Promotion.js.js';
+import moment from 'moment';
 
-class PromotionService {
+export default class PromotionService {
   async validateCoupon(couponCode, totalAmount) {
     try {
       const promotion = await Promotion.findOne({ 
@@ -85,4 +85,4 @@ class PromotionService {
   }
 }
 
-module.exports = new PromotionService();
+export default new PromotionService();

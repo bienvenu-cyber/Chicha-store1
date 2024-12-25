@@ -1,10 +1,10 @@
-const { google } = require('googleapis');
-const FacebookAds = require('facebook-ads-sdk');
-const ErrorHandler = require('../utils/errorHandler');
-const PrivacyManager = require('../utils/privacyManager');
-const APIPerformance = require('../utils/apiPerformance');
+import { google } from 'googleapis';
+import FacebookAds from 'facebook-ads-sdk';
+import ErrorHandler from '../utils/errorHandler.js.js';
+import PrivacyManager from '../utils/privacyManager.js.js';
+import APIPerformance from '../utils/apiPerformance.js.js';
 
-class AdsPlatformService {
+export default class AdsPlatformService {
   constructor() {
     // Configuration Google Ads
     this.googleAdsClient = new google.ads.v14.GoogleAdsClient({
@@ -207,4 +207,4 @@ class AdsPlatformService {
   }
 }
 
-module.exports = new AdsPlatformService();
+export default new AdsPlatformService();

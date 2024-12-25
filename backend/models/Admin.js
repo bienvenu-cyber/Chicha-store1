@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const adminSchema = new mongoose.Schema({
   username: {
@@ -123,4 +123,4 @@ adminSchema.methods.resetLoginAttempts = async function() {
 adminSchema.index({ email: 1 }, { unique: true });
 adminSchema.index({ username: 1 }, { unique: true });
 
-module.exports = mongoose.model('Admin', adminSchema);
+export default mongoose.model('Admin', adminSchema);

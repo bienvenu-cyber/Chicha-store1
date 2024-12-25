@@ -1,6 +1,6 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-class PrivacyManager {
+export default class PrivacyManager {
   // Hachage des données personnelles
   static hashPersonalData(data) {
     return crypto
@@ -123,4 +123,4 @@ class PrivacyManager {
   }
 }
 
-module.exports = PrivacyManager;
+export default PrivacyManager;

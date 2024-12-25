@@ -1,49 +1,80 @@
 version: '3.8'
+
 services:
-  backend:
-    environment:
-      - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongodb:27017/chicha_store_prod
-      - REDIS_HOST=redis
-      - LOGGING_LEVEL=error
-    deploy:
-      replicas: 4
-      update_config:
-        parallelism: 2
-        delay: 5s
-        order: rolling-update
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-
-  frontend:
-    environment:
-      - REACT_APP_API_URL=https://api.chichastore.com
-      - REACT_APP_ENVIRONMENT=production
-    deploy:
-      replicas: 4
-      update_config:
-        parallelism: 2
-        delay: 5s
-        order: rolling-update
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-
   mongodb:
+    image: mongo:latest
+    container_name: chicha-store-mongodb
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=chicha_store
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
-      - prod-data:/data/db
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - chicha-network
 
   redis:
+    image: redis:alpine
+    container_name: chicha-store-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - chicha-network
+
+  backend:
+    image: chichastore/backend:${GITHUB_SHA}
+    container_name: chicha-store-backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://${DB_USERNAME}:${DB_PASSWORD}@mongodb:27017/chicha_store
+      - JWT_SECRET=${JWT_SECRET}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - "5000:5000"
+    networks:
+      - chicha-network
+
+  frontend:
+    image: chichastore/frontend:${GITHUB_SHA}
+    container_name: chicha-store-frontend
+    restart: always
+    environment:
+      - REACT_APP_API_URL=http://backend:5000/api
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - chicha-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: chicha-store-nginx
+    restart: always
     volumes:
-      - prod-redis:/data
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - chicha-network
 
 volumes:
-  prod-data:
-  prod-redis:
+  mongodb_data:
+    driver: local
+
+networks:
+  chicha-network:
+    driver: bridge

@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 // Importation des routes
-const authRoutes = require('./authRoutes');
-const productRoutes = require('./productRoutes');
-const imageUploadRoutes = require('./imageUploadRoutes');
-const recommendationRoutes = require('./recommendationRoutes');
-const personalizationRoutes = require('./personalizationRoutes');
+import authRoutes from './authRout.jses.js.js.js';
+import productRoutes from './productRout.jses.js.js.js';
+import imageUploadRoutes from './imageUploadRout.jses.js.js.js';
+import recommendationRoutes from './recommendationRout.jses.js.js.js';
+import personalizationRoutes from './personalizationRout.jses.js.js.js';
 
 // Routes d'authentification
 router.use('/auth', authRoutes);
@@ -41,4 +41,4 @@ router.get('/health', (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

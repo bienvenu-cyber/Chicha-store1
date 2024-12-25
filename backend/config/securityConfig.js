@@ -1,11 +1,11 @@
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const cors = require('cors');
-const CryptographyService = require('../services/cryptographyService');
-const IntrusionDetectionService = require('../services/intrusionDetectionService');
-const ComplianceAuditService = require('../services/complianceAuditService');
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+import CryptographyService from '../services/cryptographyService.js.js';
+import IntrusionDetectionService from '../services/intrusionDetectionService.js.js';
+import ComplianceAuditService from '../services/complianceAuditService.js.js';
 
-module.exports = {
+export default {
   // Configuration Helmet pour sécurité HTTP
   helmetConfig: {
     contentSecurityPolicy: {

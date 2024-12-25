@@ -1,9 +1,9 @@
-const tf = require('@tensorflow/tfjs-node');
-const ChichaMix = require('../models/ChichaMix');
-const User = require('../models/User');
-const Product = require('../models/Product');
+import tf from '@tensorflow/tfjs-node';
+import ChichaMix from '../models/ChichaMix.js.js';
+import User from '../models/User.js.js';
+import Product from '../models/Product.js.js';
 
-class AdvancedRecommendationEngine {
+export default class AdvancedRecommendationEngine {
   constructor() {
     this.model = null;
     this.initializeDeepLearningModel();
@@ -156,4 +156,4 @@ class AdvancedRecommendationEngine {
   }
 }
 
-module.exports = new AdvancedRecommendationEngine();
+export default new AdvancedRecommendationEngine();

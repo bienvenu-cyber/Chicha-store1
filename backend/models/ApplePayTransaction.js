@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ApplePayTransactionSchema = new mongoose.Schema({
   order: {
@@ -74,4 +74,4 @@ ApplePayTransactionSchema.statics.createTransaction = async function(
   return await transaction.save();
 };
 
-module.exports = mongoose.model('ApplePayTransaction', ApplePayTransactionSchema);
+export default mongoose.model('ApplePayTransaction', ApplePayTransactionSchema);

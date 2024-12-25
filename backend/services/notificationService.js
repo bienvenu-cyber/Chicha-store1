@@ -1,8 +1,8 @@
-const nodemailer = require('nodemailer');
-const { Notification } = require('../models/Notification');
-const { User } = require('../models/User');
+import nodemailer from 'nodemailer';
+import { Notification } from '../models/Notification.js.js';
+import { User } from '../models/User.js.js';
 
-class NotificationService {
+export default class NotificationService {
   constructor() {
     // Configuration du transporteur email
     this.transporter = nodemailer.createTransport({
@@ -181,4 +181,4 @@ class NotificationService {
   }
 }
 
-module.exports = new NotificationService();
+export default new NotificationService();

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const CountrySchema = new mongoose.Schema({
   name: {
@@ -72,4 +72,4 @@ CountrySchema.statics.getCountriesByContinent = async function(continent) {
   return await this.find({ continent }).select('name code');
 };
 
-module.exports = mongoose.model('Country', CountrySchema);
+export default mongoose.model('Country', CountrySchema);

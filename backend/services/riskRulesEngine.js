@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const axios = require('axios');
+import mongoose from 'mongoose';
+import axios from 'axios';
 
-class RiskRulesEngine {
+export default class RiskRulesEngine {
   constructor() {
     this.riskThresholds = {
       LOW: { score: 0, maxAmount: 500 },
@@ -251,4 +251,4 @@ class RiskRulesEngine {
   }
 }
 
-module.exports = new RiskRulesEngine();
+export default new RiskRulesEngine();

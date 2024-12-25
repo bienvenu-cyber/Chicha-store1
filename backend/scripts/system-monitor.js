@@ -1,5 +1,5 @@
 import os from 'os';
-import { logger } from '../src/config/logger.js';
+import { logger } from '../src/config/logger.js.js.js';
 
 function checkSystemResources() {
   const cpuUsage = process.cpuUsage();

@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const ImageUploadService = require('../services/imageUploadService');
-const Product = require('../models/Product');
-const authMiddleware = require('../middleware/authMiddleware');
+import ImageUploadService from '../services/imageUploadService.js.js';
+import Product from '../models/Product.js.js';
+import authMiddleware from '../middleware/authMiddleware.js.js';
 
 // Configuration de Multer pour le téléchargement
 const upload = ImageUploadService.configureMulter();
@@ -79,4 +79,4 @@ router.delete('/product/:productId/image/:imageId',
     }
 );
 
-module.exports = router;
+export default router;

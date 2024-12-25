@@ -1,8 +1,4 @@
-const { auth, adminAuth } = require('../middleware/auth');
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-
-describe('Authentication Middleware', () => {
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";describe('Authentication Middleware', () => {
   let mockReq, mockRes, mockNext;
 
   beforeEach(() => {

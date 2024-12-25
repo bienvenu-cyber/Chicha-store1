@@ -1,10 +1,10 @@
-const axios = require('axios');
-const geoip = require('geoip-lite');
-const User = require('../models/User');
-const EmailNotificationService = require('./emailNotificationService');
-const { performance } = require('perf_hooks');
+import axios from 'axios';
+import geoip from 'geoip-lite';
+import User from '../models/User.js.js';
+import EmailNotificationService from './emailNotificationService.js.js.js';
+import { performance } from 'perf_hooks';
 
-class ThreatMonitoringService {
+export default class ThreatMonitoringService {
   constructor() {
     this.blacklistedIPs = new Set();
     this.suspiciousActivities = new Map();
@@ -170,4 +170,4 @@ class ThreatMonitoringService {
   }
 }
 
-module.exports = new ThreatMonitoringService();
+export default new ThreatMonitoringService();

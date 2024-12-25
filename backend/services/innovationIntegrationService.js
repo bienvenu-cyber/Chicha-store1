@@ -1,10 +1,10 @@
-const AugmentedRealityService = require('../frontend/src/services/augmentedRealityService');
-const AIRecommendationEngine = require('./aiRecommendationEngine');
-const BehavioralAIService = require('./behavioralAIService');
-const CommunityEngagementService = require('./communityEngagementService');
-const MixCreationGameService = require('./mixCreationGameService');
+import AugmentedRealityService from '../frontend/src/services/augmentedRealityService.js.js';
+import AIRecommendationEngine from './aiRecommendationEngine.js.js.js';
+import BehavioralAIService from './behavioralAIService.js.js.js';
+import CommunityEngagementService from './communityEngagementService.js.js.js';
+import MixCreationGameService from './mixCreationGameService.js.js.js';
 
-class InnovationIntegrationService {
+export default class InnovationIntegrationService {
   constructor() {
     this.services = {
       augmentedReality: AugmentedRealityService,
@@ -154,4 +154,4 @@ class InnovationIntegrationService {
   }
 }
 
-module.exports = new InnovationIntegrationService();
+export default new InnovationIntegrationService();

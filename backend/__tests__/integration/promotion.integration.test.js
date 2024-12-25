@@ -1,10 +1,6 @@
-const request = require('supertest');
-const mongoose = require('mongoose');
-const app = require('../../server');
-const User = require('../../models/User');
-const Promotion = require('../../models/Promotion');
-const Product = require('../../models/Product');
-const { setupTestDatabase, teardownTestDatabase } = require('../testUtils');
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";import Promotion from '../../models/Promotion.js.js.js.js';
+import Product from '../../models/Product.js.js.js.js';
+import { setupTestDatabase, teardownTestDatabase } from '../testUtils.js.js.js.js';
 
 describe('Promotion Integration Tests', () => {
   let adminUser, regularUser, testProduct, authTokenAdmin, authTokenUser;

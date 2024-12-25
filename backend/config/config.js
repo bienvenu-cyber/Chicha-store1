@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-module.exports = {
+export default {
   // Configuration des services d'innovation
   innovations: {
     augmentedReality: {

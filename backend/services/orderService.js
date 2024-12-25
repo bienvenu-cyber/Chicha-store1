@@ -1,10 +1,10 @@
-const { Order } = require('../models/Order');
-const { Product } = require('../models/Product');
-const { User } = require('../models/User');
-const PaymentService = require('./paymentService');
-const NotificationService = require('./notificationService');
+import { Order } from '../models/Order.js.js';
+import { Product } from '../models/Product.js.js';
+import { User } from '../models/User.js.js';
+import PaymentService from './paymentService.js.js.js';
+import NotificationService from './notificationService.js.js.js';
 
-class OrderService {
+export default class OrderService {
   // Création d'une commande
   async createOrder(userId, orderData) {
     try {
@@ -252,4 +252,4 @@ class OrderService {
   }
 }
 
-module.exports = new OrderService();
+export default new OrderService();

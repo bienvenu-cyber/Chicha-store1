@@ -1,8 +1,4 @@
-const request = require('supertest');
-const mongoose = require('mongoose');
-const app = require('../server');
-const Product = require('../models/Product');
-const { setupTestDatabase, teardownTestDatabase } = require('./testUtils');
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";import { setupTestDatabase, teardownTestDatabase } from './testUtils.js.js.js.js.js';
 
 describe('Product Routes', () => {
   beforeAll(async () => {

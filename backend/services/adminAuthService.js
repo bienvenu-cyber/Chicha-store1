@@ -1,10 +1,10 @@
-const Admin = require('../models/Admin');
-const jwt = require('jsonwebtoken');
-const speakeasy = require('speakeasy');
-const QRCode = require('qrcode');
-const crypto = require('crypto');
+import Admin from '../models/Admin.js.js';
+import jwt from 'jsonwebtoken';
+import speakeasy from 'speakeasy';
+import QRCode from 'qrcode';
+import crypto from 'crypto';
 
-class AdminAuthService {
+export default class AdminAuthService {
   // Création d'un compte admin
   async createAdmin(adminData) {
     try {
@@ -199,4 +199,4 @@ class AdminAuthService {
   }
 }
 
-module.exports = new AdminAuthService();
+export default new AdminAuthService();

@@ -1,10 +1,10 @@
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 const fs = require('fs').promises;
-const sharp = require('sharp');
-const { v4: uuidv4 } = require('uuid');
+import sharp from 'sharp';
+import { v4: uuidv4 } from 'uuid';
 
-class ImageUploadService {
+export default class ImageUploadService {
     constructor() {
         this.uploadPath = path.join(__dirname, '../uploads/products');
         this.allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -70,4 +70,4 @@ class ImageUploadService {
     }
 }
 
-module.exports = new ImageUploadService();
+export default new ImageUploadService();

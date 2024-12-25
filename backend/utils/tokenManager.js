@@ -1,8 +1,8 @@
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const Redis = require('ioredis');
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import Redis from 'ioredis';
 
-class TokenManager {
+export default class TokenManager {
   constructor() {
     // Configuration Redis pour le stockage sécurisé des tokens
     this.redis = new Redis({
@@ -125,4 +125,4 @@ class TokenManager {
   }
 }
 
-module.exports = new TokenManager();
+export default new TokenManager();

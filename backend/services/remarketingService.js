@@ -1,9 +1,9 @@
-const RemarketingCampaign = require('../models/RemarketingCampaign');
-const User = require('../models/User');
-const { sendEmail } = require('./emailService');
-const { trackEvent } = require('./analyticsService');
+import RemarketingCampaign from '../models/RemarketingCampaign.js.js';
+import User from '../models/User.js.js';
+import { sendEmail } from './emailService.js.js.js';
+import { trackEvent } from './analyticsService.js.js.js';
 
-class RemarketingService {
+export default class RemarketingService {
   async trackAbandonedCart(userId, cartItems) {
     try {
       // Créer une campagne de remarketing
@@ -103,7 +103,7 @@ class RemarketingService {
     }
   }
 
-  private generateAbandonedCartEmailContent(campaign) {
+  generateAbandonedCartEmailContent(campaign) {
     const items = campaign.abandonedCartItems.map(item => `
       <div style="display: flex; align-items: center; margin-bottom: 10px;">
         <img src="${item.product.imageUrl}" alt="${item.product.name}" style="width: 100px; margin-right: 10px;" />
@@ -141,15 +141,15 @@ class RemarketingService {
     `;
   }
 
-  private async sendGoogleAdsCampaign(campaign) {
+  async sendGoogleAdsCampaign(campaign) {
     // Intégration avec l'API Google Ads
     // À implémenter selon la documentation de Google Ads
   }
 
-  private async sendFacebookAdsCampaign(campaign) {
+  async sendFacebookAdsCampaign(campaign) {
     // Intégration avec l'API Facebook Ads
     // À implémenter selon la documentation de Facebook Ads
   }
 }
 
-module.exports = new RemarketingService();
+export default new RemarketingService();

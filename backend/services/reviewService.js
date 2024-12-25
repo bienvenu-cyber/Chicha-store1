@@ -1,7 +1,7 @@
-const Review = require('../models/Review');
-const Product = require('../models/Product');
+import Review from '../models/Review.js.js';
+import Product from '../models/Product.js.js';
 
-class ReviewService {
+export default class ReviewService {
   async createReview(reviewData) {
     try {
       // Vérifier si l'utilisateur a déjà laissé un avis pour ce produit
@@ -97,4 +97,4 @@ class ReviewService {
   }
 }
 
-module.exports = new ReviewService();
+export default new ReviewService();

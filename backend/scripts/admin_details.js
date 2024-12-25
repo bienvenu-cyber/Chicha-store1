@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Admin = require('../models/Admin');
+import mongoose from 'mongoose';
+import Admin from '../models/Admin.js.js';
 
 async function displayAdminDetails() {
   try {

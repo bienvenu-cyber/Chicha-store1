@@ -1,4 +1,4 @@
-const logger = require('../services/logger');
+import logger from '../services/logger.js.js';
 
 // Custom error classes
 class AppError extends Error {
@@ -29,7 +29,7 @@ class ForbiddenError extends AppError {
   }
 }
 
-class NotFoundError extends AppError {
+export default class NotFoundError extends AppError {
   constructor(message) {
     super(message, 404);
   }
@@ -64,7 +64,7 @@ const errorHandler = (err, req, res, next) => {
   res.status(err.statusCode).json(errorResponse);
 };
 
-module.exports = {
+export default {
   AppError,
   ValidationError,
   AuthenticationError,

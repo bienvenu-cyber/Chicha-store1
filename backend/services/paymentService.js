@@ -1,9 +1,10 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Order } = require('../models/Order');
-const { Product } = require('../models/Product');
-const { User } = require('../models/User');
+import Stripe from 'stripe';
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+import { Order } from '../models/Order.js.js';
+import { Product } from '../models/Product.js.js';
+import { User } from '../models/User.js.js';
 
-class PaymentService {
+export default class PaymentService {
   // Création d'un paiement Stripe
   async createPaymentIntent(order) {
     try {
@@ -220,4 +221,4 @@ class PaymentService {
   }
 }
 
-module.exports = new PaymentService();
+export default new PaymentService();

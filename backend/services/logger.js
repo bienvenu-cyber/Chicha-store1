@@ -1,5 +1,5 @@
-const winston = require('winston');
-const path = require('path');
+import winston from 'winston';
+import path from 'path';
 
 // Define log levels
 const levels = {
@@ -73,4 +73,6 @@ logger.logError = (error, context = {}) => {
     }));
 };
 
-module.exports = logger;
+export default logger;
+
+export default {};

@@ -1,5 +1,5 @@
-const prometheus = require('prom-client');
-const os = require('os');
+import prometheus from 'prom-client';
+import os from 'os';
 
 class PerformanceMonitoring {
   constructor() {
@@ -96,4 +96,4 @@ class PerformanceMonitoring {
   }
 }
 
-module.exports = new PerformanceMonitoring();
+export default new PerformanceMonitoring();

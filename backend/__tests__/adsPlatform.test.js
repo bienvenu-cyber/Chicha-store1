@@ -1,8 +1,4 @@
-const mongoose = require('mongoose');
-const AdsPlatformService = require('../services/adsPlatformService');
-const User = require('../models/User');
-const Product = require('../models/Product');
-
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
 describe('Intégration Plateformes Publicitaires', () => {
   let testUser;
   let testProduct;

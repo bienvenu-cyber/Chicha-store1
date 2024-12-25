@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const remarketingCampaignSchema = new mongoose.Schema({
   user: {
@@ -71,4 +71,4 @@ remarketingCampaignSchema.statics.createFromAbandonedCart = async function(userI
   return await campaign.save();
 };
 
-module.exports = mongoose.model('RemarketingCampaign', remarketingCampaignSchema);
+export default mongoose.model('RemarketingCampaign', remarketingCampaignSchema);

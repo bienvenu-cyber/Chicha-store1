@@ -1,7 +1,7 @@
-const { performance } = require('perf_hooks');
-const Redis = require('ioredis');
+import { performance } from 'perf_hooks';
+import Redis from 'ioredis';
 
-class APIPerformanceManager {
+export default class APIPerformanceManager {
   constructor() {
     // Cache Redis pour optimisation
     this.redis = new Redis({
@@ -128,4 +128,4 @@ class APIPerformanceManager {
   }
 }
 
-module.exports = new APIPerformanceManager();
+export default new APIPerformanceManager();
