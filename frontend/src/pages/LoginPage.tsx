@@ -8,7 +8,7 @@ import {
   Link as MuiLink 
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../services/authService';
+import { authService } from '../services/authService';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await authService.login(email, password);
       navigate('/dashboard');
     } catch (err) {
       setError('Identifiants incorrects');

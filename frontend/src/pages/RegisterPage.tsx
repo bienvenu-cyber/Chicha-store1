@@ -8,7 +8,7 @@ import {
   Link as MuiLink 
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../services/authService';
+import { authService } from '../services/authService';
 
 const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -27,7 +27,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      await register(name, email, password);
+      await authService.register(name, email, password);
       navigate('/login');
     } catch (err) {
       setError('Erreur lors de l\'inscription');
