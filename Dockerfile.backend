@@ -1,24 +1,24 @@
 # Image de base
-FROM node:20-alpine
+FROM node:18-alpine
 
 # Définir le répertoire de travail
-WORKDIR /app/backend
+WORKDIR /app
 
 # Copier les fichiers de dépendances
 COPY backend/package*.json ./
 
 # Installer les dépendances
-RUN npm ci --only=production
+RUN npm install
 
 # Copier le reste des fichiers backend
 COPY backend/ .
 
 # Variables d'environnement
 ENV NODE_ENV=production
-ENV PORT=8080
+ENV PORT=5000
 
 # Exposer le port
-EXPOSE 8080
+EXPOSE 5000
 
 # Commande de démarrage
-CMD ["node", "server.js"]
+CMD ["npm", "run", "start"]

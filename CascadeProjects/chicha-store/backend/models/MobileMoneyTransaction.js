@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const MobileMoneyTransactionSchema = new mongoose.Schema({
   order: {
@@ -113,4 +113,4 @@ MobileMoneyTransactionSchema.statics.generateUSSDCode = function(provider) {
   return ussdCodes[provider] || '*100#';
 };
 
-module.exports = mongoose.model('MobileMoneyTransaction', MobileMoneyTransactionSchema);
+export default = mongoose.model('MobileMoneyTransaction', MobileMoneyTransactionSchema);

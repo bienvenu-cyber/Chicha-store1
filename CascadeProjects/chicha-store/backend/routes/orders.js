@@ -1,8 +1,8 @@
-const express = require('express');
+const express = import('express');
 const router = express.Router();
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const { auth, adminAuth } = require('../middleware/auth');
+const Order = import('../models/Order');
+const Product = import('../models/Product');
+const { auth, adminAuth } = import('../middleware/auth');
 
 // Créer une nouvelle commande
 router.post('/', auth, async (req, res) => {
@@ -124,4 +124,4 @@ router.get('/', adminAuth, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default = router;

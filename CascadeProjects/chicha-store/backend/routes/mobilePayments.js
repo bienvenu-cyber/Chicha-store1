@@ -1,7 +1,7 @@
-const express = require('express');
+const express = import('express');
 const router = express.Router();
-const MobilePaymentController = require('../controllers/mobilePaymentController');
-const AuthMiddleware = require('../middleware/authMiddleware');
+const MobilePaymentController = import('../controllers/mobilePaymentController');
+const AuthMiddleware = import('../middleware/authMiddleware');
 
 // Routes pour les paiements mobile money
 
@@ -35,4 +35,4 @@ router.post('/refund',
   MobilePaymentController.refundPayment
 );
 
-module.exports = router;
+export default = router;

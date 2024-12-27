@@ -1,6 +1,6 @@
-const { Product } = require('../models/Product');
-const { User } = require('../models/User');
-const { Order } = require('../models/Order');
+const { Product } = import('../models/Product');
+const { User } = import('../models/User');
+const { Order } = import('../models/Order');
 
 class RecommendationService {
   async getPersonalizedRecommendations(userId, context = {}) {
@@ -101,4 +101,4 @@ class RecommendationService {
   }
 }
 
-module.exports = new RecommendationService();
+export default = new RecommendationService();

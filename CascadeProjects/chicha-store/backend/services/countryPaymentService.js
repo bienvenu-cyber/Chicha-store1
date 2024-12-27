@@ -1,6 +1,6 @@
-const axios = require('axios');
-const { Country } = require('../models/Country');
-const { PaymentMethod } = require('../models/PaymentMethod');
+const axios = import('axios');
+const { Country } = import('../models/Country');
+const { PaymentMethod } = import('../models/PaymentMethod');
 
 class CountryPaymentService {
   // Configuration des méthodes de paiement par pays
@@ -78,4 +78,4 @@ class CountryPaymentService {
   static async getPaymentMethodFees(paymentMethod) { /* ... */ }
 }
 
-module.exports = CountryPaymentService;
+export default = CountryPaymentService;

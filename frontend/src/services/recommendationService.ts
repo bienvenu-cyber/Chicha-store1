@@ -22,10 +22,10 @@ class RecommendationService {
     return storedPreferences 
       ? JSON.parse(storedPreferences) 
       : {
-          categoryPreferences: {},
-          lastViewedProducts: [],
-          purchaseHistory: []
-        };
+        categoryPreferences: {},
+        lastViewedProducts: [],
+        purchaseHistory: []
+      };
   }
 
   // Mettre à jour les préférences utilisateur

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const mobilePaymentSchema = new mongoose.Schema({
     order: {
@@ -40,4 +40,4 @@ const mobilePaymentSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('MobilePayment', mobilePaymentSchema);
+export default = mongoose.model('MobilePayment', mobilePaymentSchema);

@@ -1,8 +1,8 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const paypal = require('paypal-rest-sdk');
-const { Order } = require('../models/Order');
-const { TransactionRisk } = require('../models/TransactionRisk');
-const PaymentIntegrationService = require('../services/paymentIntegrationService');
+const stripe = import('stripe')(process.env.STRIPE_SECRET_KEY);
+const paypal = import('paypal-rest-sdk');
+const { Order } = import('../models/Order');
+const { TransactionRisk } = import('../models/TransactionRisk');
+const PaymentIntegrationService = import('../services/paymentIntegrationService');
 
 // Configuration des services de paiement
 paypal.configure({
@@ -371,4 +371,4 @@ class PaymentController {
   }
 }
 
-module.exports = new PaymentController();
+export default = new PaymentController();

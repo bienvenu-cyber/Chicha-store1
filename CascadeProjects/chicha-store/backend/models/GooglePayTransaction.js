@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const GooglePayTransactionSchema = new mongoose.Schema({
   order: {
@@ -74,4 +74,4 @@ GooglePayTransactionSchema.statics.createTransaction = async function(
   return await transaction.save();
 };
 
-module.exports = mongoose.model('GooglePayTransaction', GooglePayTransactionSchema);
+export default = mongoose.model('GooglePayTransaction', GooglePayTransactionSchema);

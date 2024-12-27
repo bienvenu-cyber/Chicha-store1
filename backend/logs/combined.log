@@ -2,3 +2,6 @@
 2024-12-22 19:02:58:258 [33mwarn[39m: [33mAuthentication attempt without token[39m
 2024-12-22 19:03:23:323 [33mwarn[39m: [33mAuthentication attempt without token[39m
 2024-12-22 19:03:23:323 [33mwarn[39m: [33mAuthentication attempt without token[39m
+{"level":"info","message":"Serveur démarré sur le port 5000","timestamp":"2024-12-26T22:28:25.668Z"}
+{"level":"info","message":"Connexion à MongoDB réussie","timestamp":"2024-12-26T22:28:25.874Z"}
+{"level":"info","message":"Base de données connectée avec succès","timestamp":"2024-12-26T22:28:25.875Z"}

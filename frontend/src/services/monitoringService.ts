@@ -53,13 +53,13 @@ class MonitoringService {
   private detectBrowser(): string {
     const agent = window.navigator.userAgent.toLowerCase();
     switch (true) {
-      case agent.includes('edge'): return 'Microsoft Edge';
-      case agent.includes('opr'): return 'Opera';
-      case agent.includes('chrome'): return 'Google Chrome';
-      case agent.includes('trident'): return 'Internet Explorer';
-      case agent.includes('firefox'): return 'Mozilla Firefox';
-      case agent.includes('safari'): return 'Safari';
-      default: return 'Unknown';
+    case agent.includes('edge'): return 'Microsoft Edge';
+    case agent.includes('opr'): return 'Opera';
+    case agent.includes('chrome'): return 'Google Chrome';
+    case agent.includes('trident'): return 'Internet Explorer';
+    case agent.includes('firefox'): return 'Mozilla Firefox';
+    case agent.includes('safari'): return 'Safari';
+    default: return 'Unknown';
     }
   }
 

@@ -1,6 +1,6 @@
-const prometheus = require('prom-client');
-const mongoose = require('mongoose');
-const os = require('os');
+const prometheus = import('prom-client');
+const mongoose = import('mongoose');
+const os = import('os');
 
 class ContinuousPerformanceMonitoring {
   constructor(mongoUri) {
@@ -98,7 +98,7 @@ class ContinuousPerformanceMonitoring {
 
   // Configuration du serveur Prometheus
   startPrometheusServer(port = 9090) {
-    const express = require('express');
+    const express = import('express');
     const server = express();
 
     server.get('/metrics', async (req, res) => {
@@ -126,4 +126,4 @@ class ContinuousPerformanceMonitoring {
   }
 }
 
-module.exports = ContinuousPerformanceMonitoring;
+export default = ContinuousPerformanceMonitoring;

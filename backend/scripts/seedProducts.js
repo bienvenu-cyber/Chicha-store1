@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Product from '../models/Product.js.js';
-const fs = require('fs').promises;
+const fs = import('fs').promises;
 import path from 'path';
 
 const productData = [

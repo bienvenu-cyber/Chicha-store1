@@ -1,6 +1,6 @@
-const ExternalVerificationService = require('../services/externalVerificationService');
-const CountryPaymentService = require('../services/countryPaymentService');
-const { TransactionRisk } = require('../models/TransactionRisk');
+const ExternalVerificationService = import('../services/externalVerificationService');
+const CountryPaymentService = import('../services/countryPaymentService');
+const { TransactionRisk } = import('../models/TransactionRisk');
 
 class PaymentValidationMiddleware {
   // Middleware principal de validation de paiement
@@ -179,4 +179,4 @@ class PaymentValidationMiddleware {
   }
 }
 
-module.exports = PaymentValidationMiddleware;
+export default = PaymentValidationMiddleware;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const cryptoPaymentSchema = new mongoose.Schema({
     order: {
@@ -45,4 +45,4 @@ const cryptoPaymentSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('CryptoPayment', cryptoPaymentSchema);
+export default = mongoose.model('CryptoPayment', cryptoPaymentSchema);

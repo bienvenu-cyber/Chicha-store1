@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
+const crypto = import('crypto');
+const fs = import('fs');
+const path = import('path');
 
 function generateSecret(length = 64) {
   return crypto.randomBytes(length).toString('hex');

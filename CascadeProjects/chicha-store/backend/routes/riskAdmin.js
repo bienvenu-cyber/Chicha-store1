@@ -1,8 +1,8 @@
-const express = require('express');
+const express = import('express');
 const router = express.Router();
-const RiskAdminController = require('../controllers/riskAdminController');
-const AuthMiddleware = require('../middleware/authMiddleware');
-const RoleMiddleware = require('../middleware/roleMiddleware');
+const RiskAdminController = import('../controllers/riskAdminController');
+const AuthMiddleware = import('../middleware/authMiddleware');
+const RoleMiddleware = import('../middleware/roleMiddleware');
 
 // Middleware pour s'assurer que seuls les administrateurs peuvent accéder
 const adminOnly = [
@@ -42,4 +42,4 @@ router.get('/transaction/:transactionId',
   RiskAdminController.analyzeSpecificTransaction
 );
 
-module.exports = router;
+export default = router;

@@ -28,6 +28,6 @@ const ProductImage: React.FC<ProductImageProps> = ({
       placeholderSrc="/path/to/placeholder.jpg"  // Ajoutez un placeholder
     />
   );
-}
+};
 
 export default ProductImage;

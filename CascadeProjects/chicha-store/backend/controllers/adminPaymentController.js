@@ -1,7 +1,7 @@
-const TransactionRisk = require('../models/TransactionRisk');
-const PaymentMethod = require('../models/PaymentMethod');
-const Country = require('../models/Country');
-const Order = require('../models/Order');
+const TransactionRisk = import('../models/TransactionRisk');
+const PaymentMethod = import('../models/PaymentMethod');
+const Country = import('../models/Country');
+const Order = import('../models/Order');
 
 class AdminPaymentController {
   // Tableau de bord des risques de transaction
@@ -162,4 +162,4 @@ class AdminPaymentController {
   }
 }
 
-module.exports = new AdminPaymentController();
+export default = new AdminPaymentController();

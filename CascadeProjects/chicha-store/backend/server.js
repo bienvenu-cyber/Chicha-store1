@@ -1,22 +1,22 @@
-const express = require('express');
-const http = require('http');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
-const path = require('path');
+const express = import('express');
+const http = import('http');
+const mongoose = import('mongoose');
+const cors = import('cors');
+import('dotenv').config();
+const path = import('path');
 
 // Services
-const WebSocketService = require('./services/websocketService');
-const recommendationService = require('./services/recommendationService');
+const WebSocketService = import('./services/websocketService');
+const recommendationService = import('./services/recommendationService');
 
 // Routes
-const productRoutes = require('./routes/products');
-const userRoutes = require('./routes/users');
-const orderRoutes = require('./routes/orders');
-const paymentRoutes = require('./routes/payments');
-const mobilePaymentRoutes = require('./routes/mobilePayments');
-const cryptoPaymentRoutes = require('./routes/cryptoPayments');
-const authRoutes = require('./routes/auth');
+const productRoutes = import('./routes/products');
+const userRoutes = import('./routes/users');
+const orderRoutes = import('./routes/orders');
+const paymentRoutes = import('./routes/payments');
+const mobilePaymentRoutes = import('./routes/mobilePayments');
+const cryptoPaymentRoutes = import('./routes/cryptoPayments');
+const authRoutes = import('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);

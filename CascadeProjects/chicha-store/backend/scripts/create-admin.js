@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const User = require('../models/User');
-require('dotenv').config();
+const mongoose = import('mongoose');
+const User = import('../models/User');
+import('dotenv').config();
 
 async function createAdminUser() {
     try {

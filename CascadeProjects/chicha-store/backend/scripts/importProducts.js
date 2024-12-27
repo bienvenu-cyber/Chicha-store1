@@ -1,7 +1,7 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const fs = require('fs').promises;
-const path = require('path');
+const axios = import('axios');
+const cheerio = import('cheerio');
+const fs = import('fs').promises;
+const path = import('path');
 
 class ProductImporter {
     constructor() {

@@ -1,10 +1,10 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const path = import('path');
+const HtmlWebpackPlugin = import('html-webpack-plugin');
+const TerserPlugin = import('terser-webpack-plugin');
+const CompressionPlugin = import('compression-webpack-plugin');
+const BundleAnalyzerPlugin = import('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-module.exports = (env, argv) => {
+export default = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
   return {

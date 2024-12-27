@@ -69,14 +69,14 @@ export const useCryptoPay = () => {
       setCryptoCharge(response.data);
 
       switch (response.data.status) {
-        case 'completed':
-          showNotification('success', 'Paiement crypto confirmé');
-          break;
-        case 'failed':
-          showNotification('error', 'Paiement crypto échoué');
-          break;
-        default:
-          showNotification('info', 'Statut du paiement crypto en attente');
+      case 'completed':
+        showNotification('success', 'Paiement crypto confirmé');
+        break;
+      case 'failed':
+        showNotification('error', 'Paiement crypto échoué');
+        break;
+      default:
+        showNotification('info', 'Statut du paiement crypto en attente');
       }
 
       setLoading(false);

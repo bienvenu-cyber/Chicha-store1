@@ -25,8 +25,8 @@ const colors = {
 
 const typography = {
   fonts: {
-    heading: "'Montserrat', sans-serif",
-    body: "'Open Sans', sans-serif"
+    heading: '\'Montserrat\', sans-serif',
+    body: '\'Open Sans\', sans-serif'
   },
   fontSizes: {
     xs: '0.75rem',

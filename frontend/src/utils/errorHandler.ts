@@ -15,36 +15,36 @@ export const handleApiError = (error: unknown): ErrorResponse => {
       const data = axiosError.response.data as { message?: string };
       
       switch (status) {
-        case 400:
-          return { 
-            message: data.message || 'Requête invalide', 
-            status 
-          };
-        case 401:
-          return { 
-            message: 'Non autorisé. Veuillez vous connecter.', 
-            status 
-          };
-        case 403:
-          return { 
-            message: 'Accès refusé', 
-            status 
-          };
-        case 404:
-          return { 
-            message: 'Ressource non trouvée', 
-            status 
-          };
-        case 500:
-          return { 
-            message: 'Erreur serveur. Réessayez plus tard.', 
-            status 
-          };
-        default:
-          return { 
-            message: data.message || 'Une erreur est survenue', 
-            status 
-          };
+      case 400:
+        return { 
+          message: data.message || 'Requête invalide', 
+          status 
+        };
+      case 401:
+        return { 
+          message: 'Non autorisé. Veuillez vous connecter.', 
+          status 
+        };
+      case 403:
+        return { 
+          message: 'Accès refusé', 
+          status 
+        };
+      case 404:
+        return { 
+          message: 'Ressource non trouvée', 
+          status 
+        };
+      case 500:
+        return { 
+          message: 'Erreur serveur. Réessayez plus tard.', 
+          status 
+        };
+      default:
+        return { 
+          message: data.message || 'Une erreur est survenue', 
+          status 
+        };
       }
     } else if (axiosError.request) {
       // La requête a été faite mais pas de réponse

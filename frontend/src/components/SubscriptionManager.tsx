@@ -63,9 +63,9 @@ const SubscriptionManager: React.FC = () => {
 
   const calculateDiscount = (frequency: Subscription['frequency']): number => {
     switch(frequency) {
-      case 'Trimestriel': return 10;  // 10% de réduction
-      case 'Semestriel': return 20;   // 20% de réduction
-      default: return 0;
+    case 'Trimestriel': return 10;  // 10% de réduction
+    case 'Semestriel': return 20;   // 20% de réduction
+    default: return 0;
     }
   };
 
@@ -80,7 +80,7 @@ const SubscriptionManager: React.FC = () => {
         new Date().setMonth(
           new Date().getMonth() + 
           (selectedFrequency === 'Mensuel' ? 1 : 
-           selectedFrequency === 'Trimestriel' ? 3 : 6)
+            selectedFrequency === 'Trimestriel' ? 3 : 6)
         )
       ),
       discount: calculateDiscount(selectedFrequency)

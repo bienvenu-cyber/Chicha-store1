@@ -49,9 +49,9 @@ export const OrderHistory: React.FC = () => {
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
-      case 'pending': return 'warning';
-      case 'completed': return 'success';
-      case 'cancelled': return 'error';
+    case 'pending': return 'warning';
+    case 'completed': return 'success';
+    case 'cancelled': return 'error';
     }
   };
 

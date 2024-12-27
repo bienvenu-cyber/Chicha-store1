@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 // Types d'options d'accessibilité
 interface AccessibilityOptions {
@@ -45,21 +45,21 @@ export const useAccessibility = () => {
   }, [options]);
 
   // Méthodes de mise à jour
-  const updateFontSize = (size: number) => {
+  const updateFontSize = useCallback((size: number) => {
     setOptions(prev => ({ ...prev, fontSize: size }));
-  };
+  }, []);
 
-  const toggleHighContrast = () => {
+  const toggleHighContrast = useCallback(() => {
     setOptions(prev => ({ ...prev, highContrast: !prev.highContrast }));
-  };
+  }, []);
 
-  const toggleScreenReaderMode = () => {
+  const toggleScreenReaderMode = useCallback(() => {
     setOptions(prev => ({ ...prev, screenReaderMode: !prev.screenReaderMode }));
-  };
+  }, []);
 
-  const toggleKeyboardNavigation = () => {
+  const toggleKeyboardNavigation = useCallback(() => {
     setOptions(prev => ({ ...prev, keyboardNavigation: !prev.keyboardNavigation }));
-  };
+  }, []);
 
   // Raccourcis clavier pour l'accessibilité
   useEffect(() => {
@@ -79,7 +79,7 @@ export const useAccessibility = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyboardShortcuts);
     };
-  }, [options]);
+  }, [options, updateFontSize, toggleHighContrast]);
 
   return {
     accessibilityOptions: options,
@@ -91,7 +91,7 @@ export const useAccessibility = () => {
 };
 
 // Composant de paramètres d'accessibilité
-export const AccessibilitySettings = () => {
+export const AccessibilitySettings: React.FC = () => {
   const {
     accessibilityOptions,
     updateFontSize,
@@ -110,7 +110,7 @@ export const AccessibilitySettings = () => {
           min={12}
           max={24}
           value={accessibilityOptions.fontSize}
-          onChange={(e) => updateFontSize(Number(e.target.value))}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateFontSize(Number(e.target.value))}
           aria-valuemin={12}
           aria-valuemax={24}
           aria-valuenow={accessibilityOptions.fontSize}
@@ -134,7 +134,7 @@ export const AccessibilitySettings = () => {
           checked={accessibilityOptions.screenReaderMode}
           onChange={toggleScreenReaderMode}
         />
-        <label htmlFor="screen-reader">Mode Lecteur d'Écran</label>
+        <label htmlFor="screen-reader">Mode Lecteur d&apos;Écran</label>
       </div>
 
       <div>

@@ -1,7 +1,7 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Order } = require('../models/Order');
-const { Product } = require('../models/Product');
-const { User } = require('../models/User');
+const stripe = import('stripe')(process.env.STRIPE_SECRET_KEY);
+const { Order } = import('../models/Order');
+const { Product } = import('../models/Product');
+const { User } = import('../models/User');
 
 class PaymentService {
   // Création d'un paiement Stripe
@@ -220,4 +220,4 @@ class PaymentService {
   }
 }
 
-module.exports = new PaymentService();
+export default = new PaymentService();

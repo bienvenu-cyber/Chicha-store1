@@ -1,7 +1,7 @@
-const express = require('express');
+const express = import('express');
 const router = express.Router();
-const Product = require('../models/Product');
-const { auth, adminAuth } = require('../middleware/auth');
+const Product = import('../models/Product');
+const { auth, adminAuth } = import('../middleware/auth');
 
 // Obtenir tous les produits avec filtres
 router.get('/', async (req, res) => {
@@ -199,4 +199,4 @@ router.delete('/:id/reviews/:reviewId', auth, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default = router;

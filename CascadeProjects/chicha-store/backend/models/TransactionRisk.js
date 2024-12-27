@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const TransactionRiskSchema = new mongoose.Schema({
   transaction: {
@@ -63,4 +63,4 @@ TransactionRiskSchema.statics.createRiskRecord = async function(
   return await riskRecord.save();
 };
 
-module.exports = mongoose.model('TransactionRisk', TransactionRiskSchema);
+export default = mongoose.model('TransactionRisk', TransactionRiskSchema);

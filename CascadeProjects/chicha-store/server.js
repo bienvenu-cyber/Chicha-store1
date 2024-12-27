@@ -1,5 +1,5 @@
-const express = require('express');
-const path = require('path');
+const express = import('express');
+const path = import('path');
 const app = express();
 
 // Servir les fichiers statiques

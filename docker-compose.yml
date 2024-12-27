@@ -1,14 +1,10 @@
-version: '3.8'
-
 services:
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.frontend
     ports:
-      - "3000:3000"
-    environment:
-      - REACT_APP_API_URL=http://backend:8080/api
+      - "80:80"
     depends_on:
       - backend
     networks:
@@ -16,18 +12,15 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.backend
     ports:
-      - "8080:8080"
+      - "5000:5000"
     environment:
+      - MONGODB_URI=mongodb://mongodb:27017/chicha_store
       - NODE_ENV=production
-      - MONGODB_URI=${MONGODB_URI}
-      - JWT_SECRET=${JWT_SECRET}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     depends_on:
       - mongodb
-      - redis
     networks:
       - chicha-network
 
@@ -36,38 +29,12 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
-    environment:
-      - MONGO_INITDB_DATABASE=chicha_store
-    networks:
-      - chicha-network
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - chicha-network
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/ssl:/etc/nginx/ssl
-    depends_on:
-      - frontend
-      - backend
+      - mongodb-data:/data/db
     networks:
       - chicha-network
 
 volumes:
-  mongodb_data:
-  redis_data:
+  mongodb-data:
 
 networks:
   chicha-network:

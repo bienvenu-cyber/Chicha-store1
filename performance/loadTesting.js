@@ -1,7 +1,7 @@
-const autocannon = require('autocannon');
-const { promisify } = require('util');
-const fs = require('fs');
-const path = require('path');
+const autocannon = import('autocannon');
+const { promisify } = import('util');
+const fs = import('fs');
+const path = import('path');
 
 class PerformanceTestSuite {
   constructor(baseUrl) {
@@ -169,4 +169,4 @@ class PerformanceTestSuite {
   }
 }
 
-module.exports = PerformanceTestSuite;
+export default = PerformanceTestSuite;

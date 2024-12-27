@@ -27,7 +27,7 @@ export const useWebSocket = () => {
       // Notification système
       showNotification(notification.content, 
         notification.type === 'system' ? 'info' : 
-        notification.type === 'promotion' ? 'success' : 'warning'
+          notification.type === 'promotion' ? 'success' : 'warning'
       );
     };
 

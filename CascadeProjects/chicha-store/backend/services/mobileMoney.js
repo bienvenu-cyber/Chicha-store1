@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { Order } = require('../models/Order');
+const axios = import('axios');
+const { Order } = import('../models/Order');
 
 class MobileMoneyService {
   constructor() {
@@ -471,4 +471,4 @@ class MobileMoneyService {
   }
 }
 
-module.exports = new MobileMoneyService();
+export default = new MobileMoneyService();

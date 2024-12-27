@@ -1,7 +1,7 @@
-const socketIo = require('socket.io');
-const jwt = require('jsonwebtoken');
-const { User } = require('../models/User');
-const { Product } = require('../models/Product');
+const socketIo = import('socket.io');
+const jwt = import('jsonwebtoken');
+const { User } = import('../models/User');
+const { Product } = import('../models/Product');
 
 class WebSocketService {
   constructor(server) {
@@ -162,4 +162,4 @@ class WebSocketService {
   }
 }
 
-module.exports = WebSocketService;
+export default = WebSocketService;

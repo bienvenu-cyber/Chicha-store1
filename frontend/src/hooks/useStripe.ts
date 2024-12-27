@@ -1,147 +1,202 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { 
-  Elements, 
-  CardElement, 
-  useStripe as useStripeHook, 
-  useElements 
-} from '@stripe/react-stripe-js';
-import axios from 'axios';
-import { useAuth } from './useAuth';
-import { useNotification } from './useNotification';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '../redux/cartSlice';
 
-interface StripePaymentProps {
-  orderId: string;
-  totalAmount: number;
-  currency?: string;
+// Types pour la configuration Stripe
+interface StripeConfig {
+  publishableKey: string;
+  currency: string;
 }
 
-export const useStripe = () => {
-  const [loading, setLoading] = useState(false);
+// Types pour les détails de paiement
+interface PaymentDetails {
+  amount: number;
+  description: string;
+  customerEmail?: string;
+}
+
+// Types pour les options de carte de paiement
+interface CardOptions {
+  style?: {
+    base?: {
+      fontSize?: string;
+      color?: string;
+      fontFamily?: string;
+    };
+    invalid?: {
+      color?: string;
+    };
+  };
+}
+
+export const useStripePayment = (config: StripeConfig) => {
+  const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
 
-  const { getAuthToken } = useAuth();
-  const { showNotification } = useNotification();
+  // Initialisation de Stripe
+  const stripePromise = loadStripe(config.publishableKey);
 
-  const createPaymentIntent = useCallback(async (
-    orderId: string, 
-    totalAmount: number, 
-    currency = 'usd'
-  ) => {
+  // Création du paiement côté serveur
+  const createPaymentIntent = useCallback(async (paymentDetails: PaymentDetails) => {
     try {
-      setLoading(true);
-      const token = getAuthToken();
-      
-      const response = await axios.post(
-        '/api/payments/stripe/create-intent', 
-        { 
-          orderId, 
-          amount: totalAmount, 
-          currency 
+      const response = await fetch('/api/stripe/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        body: JSON.stringify({
+          amount: paymentDetails.amount,
+          currency: config.currency,
+          description: paymentDetails.description,
+          customerEmail: paymentDetails.customerEmail
+        }),
+      });
 
-      setClientSecret(response.data.clientSecret);
-      setLoading(false);
-      return response.data.clientSecret;
+      if (!response.ok) {
+        throw new Error('Impossible de créer l\'intention de paiement');
+      }
+
+      return await response.json();
     } catch (err) {
-      setError('Impossible de créer l\'intention de paiement');
-      showNotification('error', 'Échec de création du paiement Stripe');
-      setLoading(false);
+      const errorMessage = err instanceof Error ? err.message : 'Erreur de paiement';
+      setError(errorMessage);
       throw err;
     }
-  }, [getAuthToken]);
+  }, [config]);
 
-  const StripePaymentForm = ({ 
-    orderId, 
-    totalAmount, 
-    currency = 'usd' 
-  }: StripePaymentProps) => {
-    const stripe = useStripeHook();
+  // Composant de formulaire de paiement Stripe
+  const StripePaymentForm: React.FC<{ 
+    paymentDetails: PaymentDetails,
+    cardOptions?: CardOptions 
+  }> = ({ paymentDetails, cardOptions }) => {
+    const stripe = useStripe();
     const elements = useElements();
-    const [processing, setProcessing] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
       event.preventDefault();
-
-      if (!stripe || !elements || !clientSecret) {
+      
+      if (!stripe || !elements) {
         return;
       }
 
       setProcessing(true);
 
       try {
+        // Créer l'intention de paiement
+        const { clientSecret } = await createPaymentIntent(paymentDetails);
+
+        // Confirmer le paiement
+        const cardElement = elements.getElement(CardElement);
+        
+        if (!cardElement) {
+          throw new Error('Élément de carte non trouvé');
+        }
+
         const result = await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
-            card: elements.getElement(CardElement)!,
+            card: cardElement,
             billing_details: {
-              name: 'Client Chicha Store'
+              email: paymentDetails.customerEmail
             }
           }
         });
 
         if (result.error) {
-          throw new Error(result.error.message);
+          throw new Error(result.error.message || 'Paiement échoué');
         }
 
-        // Confirmer le paiement côté serveur
-        const token = getAuthToken();
-        await axios.post(
-          '/api/payments/stripe/confirm', 
-          { 
-            paymentIntentId: result.paymentIntent.id,
-            orderId 
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        showNotification('success', 'Paiement Stripe réussi');
+        // Paiement réussi
+        dispatch(clearCart());
         setProcessing(false);
+        
+        return result.paymentIntent;
       } catch (err) {
-        setError(err.message);
-        showNotification('error', 'Paiement Stripe échoué');
+        const errorMessage = err instanceof Error ? err.message : 'Erreur de paiement';
+        setError(errorMessage);
         setProcessing(false);
+        throw err;
       }
     };
 
     return (
       <form onSubmit={handleSubmit}>
-        <CardElement />
-        <button 
-          type="submit" 
-          disabled={!stripe || processing || loading}
-        >
-          Payer {totalAmount} {currency.toUpperCase()}
+        <CardElement 
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#424770',
+                fontFamily: 'Arial, sans-serif',
+              },
+              invalid: {
+                color: '#9e2146',
+              },
+            },
+            ...cardOptions?.style,
+          }}
+        />
+        <button type="submit" disabled={!stripe || processing}>
+          {processing ? 'Traitement...' : `Payer ${paymentDetails.amount} ${config.currency}`}
         </button>
       </form>
     );
   };
 
-  const StripePaymentWrapper = ({ 
-    orderId, 
-    totalAmount, 
-    currency = 'usd' 
-  }: StripePaymentProps) => {
-    const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY!);
-
+  // Composant wrapper Stripe
+  const StripePaymentWrapper: React.FC<{ 
+    paymentDetails: PaymentDetails,
+    cardOptions?: CardOptions 
+  }> = ({ paymentDetails, cardOptions }) => {
     return (
       <Elements stripe={stripePromise}>
         <StripePaymentForm 
-          orderId={orderId} 
-          totalAmount={totalAmount} 
-          currency={currency} 
+          paymentDetails={paymentDetails} 
+          cardOptions={cardOptions} 
         />
       </Elements>
     );
   };
 
   return {
-    createPaymentIntent,
     StripePaymentWrapper,
-    loading,
     error,
-    clientSecret
+    processing
   };
+};
+
+// Exemple d'utilisation
+export const StripePayment: React.FC = () => {
+  const stripeConfig: StripeConfig = {
+    publishableKey: process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || '',
+    currency: 'USD'
+  };
+
+  const paymentDetails: PaymentDetails = {
+    amount: 100.00,
+    description: 'Achat sur Chicha Store',
+    customerEmail: 'client@example.com'
+  };
+
+  const { StripePaymentWrapper, error, processing } = useStripePayment(stripeConfig);
+
+  return (
+    <div>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
+      {processing && <div>Traitement du paiement...</div>}
+      <StripePaymentWrapper 
+        paymentDetails={paymentDetails} 
+        cardOptions={{
+          style: {
+            base: {
+              color: '#32325d',
+              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            }
+          }
+        }} 
+      />
+    </div>
+  );
 };

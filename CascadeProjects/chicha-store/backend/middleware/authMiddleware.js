@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models/User');
+const jwt = import('jsonwebtoken');
+const { User } = import('../models/User');
 
 class AuthMiddleware {
   // Vérification du token
@@ -143,4 +143,4 @@ class AuthMiddleware {
   }
 }
 
-module.exports = AuthMiddleware;
+export default = AuthMiddleware;

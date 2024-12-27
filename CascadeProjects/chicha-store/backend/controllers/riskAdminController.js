@@ -1,6 +1,6 @@
-const CustomRiskRuleService = require('../services/customRiskRuleService');
-const { TransactionRisk } = require('../models/TransactionRisk');
-const { CustomRiskRule } = require('../models/CustomRiskRule');
+const CustomRiskRuleService = import('../services/customRiskRuleService');
+const { TransactionRisk } = import('../models/TransactionRisk');
+const { CustomRiskRule } = import('../models/CustomRiskRule');
 
 class RiskAdminController {
   // Créer une nouvelle règle de risque personnalisée
@@ -177,4 +177,4 @@ class RiskAdminController {
   }
 }
 
-module.exports = new RiskAdminController();
+export default = new RiskAdminController();

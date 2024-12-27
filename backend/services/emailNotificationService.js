@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import handlebars from 'handlebars';
-const fs = require('fs').promises;
+const fs = import('fs').promises;
 import path from 'path';
 
 export default class EmailNotificationService {

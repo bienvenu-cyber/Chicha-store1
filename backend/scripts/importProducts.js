@@ -1,6 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-const fs = require('fs').promises;
+const fs = import('fs').promises;
 import path from 'path';
 
 class ProductImporter {

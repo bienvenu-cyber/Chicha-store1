@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const PaymentMethodSchema = new mongoose.Schema({
   name: {
@@ -70,4 +70,4 @@ PaymentMethodSchema.statics.getMethodsByType = async function(type) {
   return await this.find({ type }).select('name provider');
 };
 
-module.exports = mongoose.model('PaymentMethod', PaymentMethodSchema);
+export default = mongoose.model('PaymentMethod', PaymentMethodSchema);

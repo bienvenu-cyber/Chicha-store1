@@ -42,9 +42,9 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({
 
   const getRecommendations = () => {
     switch (type) {
-      case 'personalized': return personalizedRecommendations;
-      case 'related': return relatedProducts;
-      case 'browsing': return browsingRecommendations;
+    case 'personalized': return personalizedRecommendations;
+    case 'related': return relatedProducts;
+    case 'browsing': return browsingRecommendations;
     }
   };
 
@@ -52,12 +52,12 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({
 
   const renderTitle = () => {
     switch (type) {
-      case 'personalized': 
-        return 'Recommandés pour vous';
-      case 'related': 
-        return 'Produits similaires';
-      case 'browsing': 
-        return 'Basé sur votre navigation';
+    case 'personalized': 
+      return 'Recommandés pour vous';
+    case 'related': 
+      return 'Produits similaires';
+    case 'browsing': 
+      return 'Basé sur votre navigation';
     }
   };
 

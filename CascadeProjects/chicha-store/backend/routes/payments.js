@@ -1,8 +1,8 @@
-const express = require('express');
+const express = import('express');
 const router = express.Router();
-const PaymentController = require('../controllers/paymentController');
-const PaymentValidationMiddleware = require('../middleware/paymentValidationMiddleware');
-const AuthMiddleware = require('../middleware/authMiddleware');
+const PaymentController = import('../controllers/paymentController');
+const PaymentValidationMiddleware = import('../middleware/paymentValidationMiddleware');
+const AuthMiddleware = import('../middleware/authMiddleware');
 
 // Route unifiée de traitement de paiement
 router.post('/process', 
@@ -68,4 +68,4 @@ router.get('/status/:transactionId',
   PaymentController.checkPaymentStatus
 );
 
-module.exports = router;
+export default = router;

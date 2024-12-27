@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import User from '../models/User.js.js';
-require('dotenv').config();
+import('dotenv').config();
 
 async function createAdminUser() {
     try {

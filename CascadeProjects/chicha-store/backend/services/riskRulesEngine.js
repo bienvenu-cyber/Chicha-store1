@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const axios = require('axios');
+const mongoose = import('mongoose');
+const axios = import('axios');
 
 class RiskRulesEngine {
   constructor() {
@@ -251,4 +251,4 @@ class RiskRulesEngine {
   }
 }
 
-module.exports = new RiskRulesEngine();
+export default = new RiskRulesEngine();

@@ -1,8 +1,8 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const paypal = require('paypal-rest-sdk');
-const coinbase = require('coinbase-commerce-node');
-const { Order } = require('../models/Order');
-const { User } = require('../models/User');
+const stripe = import('stripe')(process.env.STRIPE_SECRET_KEY);
+const paypal = import('paypal-rest-sdk');
+const coinbase = import('coinbase-commerce-node');
+const { Order } = import('../models/Order');
+const { User } = import('../models/User');
 
 // Configuration PayPal
 paypal.configure({
@@ -201,4 +201,4 @@ class MultiPaymentService {
   }
 }
 
-module.exports = new MultiPaymentService();
+export default = new MultiPaymentService();

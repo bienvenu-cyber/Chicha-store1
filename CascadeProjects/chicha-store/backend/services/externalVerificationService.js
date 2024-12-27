@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { TransactionRisk } = require('../models/TransactionRisk');
+const axios = import('axios');
+const { TransactionRisk } = import('../models/TransactionRisk');
 
 class ExternalVerificationService {
   // Services de vérification externes
@@ -175,4 +175,4 @@ class ExternalVerificationService {
   }
 }
 
-module.exports = ExternalVerificationService;
+export default = ExternalVerificationService;

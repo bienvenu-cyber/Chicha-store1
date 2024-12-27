@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer');
-const { Notification } = require('../models/Notification');
-const { User } = require('../models/User');
+const nodemailer = import('nodemailer');
+const { Notification } = import('../models/Notification');
+const { User } = import('../models/User');
 
 class NotificationService {
   constructor() {
@@ -181,4 +181,4 @@ class NotificationService {
   }
 }
 
-module.exports = new NotificationService();
+export default = new NotificationService();

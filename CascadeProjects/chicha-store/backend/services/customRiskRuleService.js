@@ -1,5 +1,5 @@
-const CustomRiskRule = require('../models/CustomRiskRule');
-const RiskRulesEngine = require('./riskRulesEngine');
+const CustomRiskRule = import('../models/CustomRiskRule');
+const RiskRulesEngine = import('./riskRulesEngine');
 
 class CustomRiskRuleService {
   // Créer une nouvelle règle de risque personnalisée
@@ -144,4 +144,4 @@ class CustomRiskRuleService {
   }
 }
 
-module.exports = new CustomRiskRuleService();
+export default = new CustomRiskRuleService();

@@ -1,7 +1,7 @@
-const RiskRulesEngine = require('../services/riskRulesEngine');
-const CustomRiskRuleService = require('../services/customRiskRuleService');
-const { TransactionRisk } = require('../models/TransactionRisk');
-const { Notification } = require('../models/Notification');
+const RiskRulesEngine = import('../services/riskRulesEngine');
+const CustomRiskRuleService = import('../services/customRiskRuleService');
+const { TransactionRisk } = import('../models/TransactionRisk');
+const { Notification } = import('../models/Notification');
 
 class RiskManagementMiddleware {
   // Middleware principal de gestion des risques
@@ -177,4 +177,4 @@ class RiskManagementMiddleware {
   }
 }
 
-module.exports = RiskManagementMiddleware;
+export default = RiskManagementMiddleware;

@@ -1,8 +1,8 @@
-const express = require('express');
+const express = import('express');
 const router = express.Router();
-const Promotion = require('../models/Promotion');
-const Product = require('../models/Product');
-const { auth, adminAuth } = require('../middleware/auth');
+const Promotion = import('../models/Promotion');
+const Product = import('../models/Product');
+const { auth, adminAuth } = import('../middleware/auth');
 
 // Créer une nouvelle promotion (admin only)
 router.post('/', adminAuth, async (req, res) => {
@@ -163,4 +163,4 @@ router.delete('/:id', adminAuth, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default = router;

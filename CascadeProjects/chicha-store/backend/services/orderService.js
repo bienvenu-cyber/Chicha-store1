@@ -1,8 +1,8 @@
-const { Order } = require('../models/Order');
-const { Product } = require('../models/Product');
-const { User } = require('../models/User');
-const PaymentService = require('./paymentService');
-const NotificationService = require('./notificationService');
+const { Order } = import('../models/Order');
+const { Product } = import('../models/Product');
+const { User } = import('../models/User');
+const PaymentService = import('./paymentService');
+const NotificationService = import('./notificationService');
 
 class OrderService {
   // Création d'une commande
@@ -252,4 +252,4 @@ class OrderService {
   }
 }
 
-module.exports = new OrderService();
+export default = new OrderService();

@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { ValidationError } = require('../utils/errors');
+const axios = import('axios');
+const { ValidationError } = import('../utils/errors');
 
 class PaymentValidationService {
   // Vérification de fraude multi-niveau
@@ -120,4 +120,4 @@ class PaymentValidationService {
   static async checkBankAccountBlacklist(bankAccount) { /* ... */ }
 }
 
-module.exports = PaymentValidationService;
+export default = PaymentValidationService;

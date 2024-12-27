@@ -1,6 +1,6 @@
 import multer from 'multer';
 import path from 'path';
-const fs = require('fs').promises;
+const fs = import('fs').promises;
 import sharp from 'sharp';
 import { v4: uuidv4 } from 'uuid';
 

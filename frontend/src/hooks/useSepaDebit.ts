@@ -76,14 +76,14 @@ export const useSepaDebit = () => {
       setSepaTransaction(response.data);
 
       switch (response.data.status) {
-        case 'completed':
-          showNotification('success', 'Paiement SEPA confirmé');
-          break;
-        case 'failed':
-          showNotification('error', 'Paiement SEPA échoué');
-          break;
-        default:
-          showNotification('info', 'Statut du paiement SEPA en attente');
+      case 'completed':
+        showNotification('success', 'Paiement SEPA confirmé');
+        break;
+      case 'failed':
+        showNotification('error', 'Paiement SEPA échoué');
+        break;
+      default:
+        showNotification('info', 'Statut du paiement SEPA en attente');
       }
 
       setLoading(false);

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { Country } = require('../models/Country');
-const { PaymentMethod } = require('../models/PaymentMethod');
+const mongoose = import('mongoose');
+const { Country } = import('../models/Country');
+const { PaymentMethod } = import('../models/PaymentMethod');
 
 const initializePaymentData = async () => {
   try {

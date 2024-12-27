@@ -58,23 +58,23 @@ const ProductListPage: React.FC = () => {
   };
 
   const handleSortChange = (sortOption: string) => {
-    let sorted = [...filteredProducts];
+    const sorted = [...filteredProducts];
 
     switch (sortOption) {
-      case 'price-asc':
-        sorted.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        sorted.sort((a, b) => b.price - a.price);
-        break;
-      case 'newest':
-        sorted.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        break;
-      case 'rating':
-        sorted.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
-        break;
+    case 'price-asc':
+      sorted.sort((a, b) => a.price - b.price);
+      break;
+    case 'price-desc':
+      sorted.sort((a, b) => b.price - a.price);
+      break;
+    case 'newest':
+      sorted.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      break;
+    case 'rating':
+      sorted.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
+      break;
     }
 
     setFilteredProducts(sorted);

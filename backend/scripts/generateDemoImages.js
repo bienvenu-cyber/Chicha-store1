@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = import('fs').promises;
 import path from 'path';
 import sharp from 'sharp';
 

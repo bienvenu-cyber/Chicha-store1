@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const StripeTransactionSchema = new mongoose.Schema({
   order: {
@@ -74,4 +74,4 @@ StripeTransactionSchema.statics.createTransaction = async function(
   return await transaction.save();
 };
 
-module.exports = mongoose.model('StripeTransaction', StripeTransactionSchema);
+export default = mongoose.model('StripeTransaction', StripeTransactionSchema);

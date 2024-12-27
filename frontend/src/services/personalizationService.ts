@@ -55,9 +55,9 @@ class PersonalizationService {
 
   private getFontSizeValue(size: PersonalizationSettings['fontSize']): string {
     switch (size) {
-      case 'small': return '14px';
-      case 'medium': return '16px';
-      case 'large': return '18px';
+    case 'small': return '14px';
+    case 'medium': return '16px';
+    case 'large': return '18px';
     }
   }
 
@@ -82,29 +82,29 @@ class PersonalizationService {
 
   private getColorBlindCSS(mode: PersonalizationSettings['colorBlindMode']): string {
     switch (mode) {
-      case 'deuteranopia':
-        return `
+    case 'deuteranopia':
+      return `
           /* Filtre pour deutéranopie */
           body {
             filter: url(#deuteranopia);
           }
         `;
-      case 'protanopia':
-        return `
+    case 'protanopia':
+      return `
           /* Filtre pour protanopie */
           body {
             filter: url(#protanopia);
           }
         `;
-      case 'tritanopia':
-        return `
+    case 'tritanopia':
+      return `
           /* Filtre pour tritanopie */
           body {
             filter: url(#tritanopia);
           }
         `;
-      default:
-        return '';
+    default:
+      return '';
     }
   }
 }

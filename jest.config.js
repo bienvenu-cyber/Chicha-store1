@@ -1,14 +1,14 @@
 export default {
-    testEnvironment: 'node',
-    transform: {
-        '^.+\.js$': 'babel-jest'
-    },
-    transformIgnorePatterns: [
-        '/node_modules/(?!express)/'
-    ],
-    moduleNameMapper: {
-        '^(\.{1,2}/.*)\.js$': '$1'
-    },
-    testRegex: '(/__tests__/.*|(\.|/)(test|spec))\.js$',
-    moduleFileExtensions: ['js', 'json', 'node']
-};
+  testEnvironment: 'node',
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
+    }
+  },
+  collectCoverage: true,
+  coverageReporters: ['text', 'lcov'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+}

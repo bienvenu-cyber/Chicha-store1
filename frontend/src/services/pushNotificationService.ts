@@ -69,7 +69,7 @@ class PushNotificationService {
       const token = await getToken(this.messaging);
       
       for (const topic of topics) {
-        await fetch(`/api/notifications/subscribe`, {
+        await fetch('/api/notifications/subscribe', {
           method: 'POST',
           body: JSON.stringify({ token, topic })
         });

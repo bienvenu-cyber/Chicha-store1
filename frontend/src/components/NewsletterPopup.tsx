@@ -39,12 +39,12 @@ const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ onClose }) => {
       setStatus('success');
       
       toast({
-        title: "Inscription réussie !",
-        description: "Vous êtes maintenant abonné à notre newsletter.",
-        status: "success",
+        title: 'Inscription réussie !',
+        description: 'Vous êtes maintenant abonné à notre newsletter.',
+        status: 'success',
         duration: 3000,
         isClosable: true,
-        position: "top"
+        position: 'top'
       });
 
       setTimeout(() => {
@@ -54,12 +54,12 @@ const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ onClose }) => {
     } catch (error) {
       setStatus('error');
       toast({
-        title: "Erreur d'inscription",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
-        status: "error",
+        title: 'Erreur d\'inscription',
+        description: 'Une erreur s\'est produite. Veuillez réessayer.',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top"
+        position: 'top'
       });
     }
   };

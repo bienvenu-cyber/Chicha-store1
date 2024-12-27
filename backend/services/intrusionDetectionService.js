@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-const fs = require('fs').promises;
+const fs = import('fs').promises;
 import path from 'path';
 import axios from 'axios';
 

@@ -1,5 +1,5 @@
-const axios = require('axios');
-const crypto = require('crypto');
+const axios = import('axios');
+const crypto = import('crypto');
 
 class PaymentIntegrationService {
   // Intégration de portefeuille électronique
@@ -176,4 +176,4 @@ class PaymentIntegrationService {
   }
 }
 
-module.exports = PaymentIntegrationService;
+export default = PaymentIntegrationService;

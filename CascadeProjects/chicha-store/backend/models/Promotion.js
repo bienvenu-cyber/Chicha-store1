@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = import('mongoose');
 
 const promotionSchema = new mongoose.Schema({
     code: {
@@ -59,4 +59,4 @@ promotionSchema.pre('find', function() {
     });
 });
 
-module.exports = mongoose.model('Promotion', promotionSchema);
+export default = mongoose.model('Promotion', promotionSchema);
