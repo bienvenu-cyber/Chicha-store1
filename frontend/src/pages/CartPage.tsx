@@ -1,10 +1,9 @@
 import React from 'react';
 import { 
-  Container, 
+  Box, 
   Typography, 
+  Container, 
   Grid, 
-  Card, 
-  CardContent, 
   Button, 
   IconButton, 
   Table, 
@@ -15,123 +14,124 @@ import {
   TableRow, 
   Paper 
 } from '@mui/material';
-import { 
-  Delete as DeleteIcon, 
-  Add as AddIcon, 
-  Remove as RemoveIcon 
-} from '@mui/icons-material';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../redux/store';
-import { 
-  removeFromCart, 
-  updateQuantity 
-} from '../redux/cartSlice';
+import { Add, Remove, Delete } from '@mui/icons-material';
+import { useCart } from '../contexts/CartContext';
+import { Link } from 'react-router-dom';
 
 const CartPage: React.FC = () => {
-  const cart = useSelector((state: RootState) => state.cart);
-  const dispatch = useDispatch();
+  const { 
+    cart, 
+    removeFromCart, 
+    updateQuantity, 
+    clearCart, 
+    getTotalPrice 
+  } = useCart();
 
-  const handleRemoveItem = (id: string) => {
-    dispatch(removeFromCart(id));
-  };
-
-  const handleUpdateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity > 0) {
-      dispatch(updateQuantity({ id, quantity: newQuantity }));
-    }
-  };
+  if (cart.length === 0) {
+    return (
+      <Container maxWidth="md" sx={{ textAlign: 'center', mt: 10 }}>
+        <Typography variant="h4" gutterBottom>
+          Votre panier est vide
+        </Typography>
+        <Button 
+          component={Link} 
+          to="/" 
+          variant="contained" 
+          color="primary"
+        >
+          Continuer mes achats
+        </Button>
+      </Container>
+    );
+  }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
         Votre Panier
       </Typography>
       
-      {cart.items.length === 0 ? (
-        <Typography variant="body1" align="center">
-          Votre panier est vide
-        </Typography>
-      ) : (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Produit</TableCell>
-                    <TableCell align="right">Prix</TableCell>
-                    <TableCell align="center">Quantité</TableCell>
-                    <TableCell align="right">Total</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {cart.items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <img 
-                          src={item.imageUrl} 
-                          alt={item.name} 
-                          style={{ width: 50, height: 50, objectFit: 'cover' }} 
-                        />
-                        {item.name}
-                      </TableCell>
-                      <TableCell align="right">{item.price} €</TableCell>
-                      <TableCell align="center">
-                        <IconButton 
-                          size="small" 
-                          onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                        >
-                          <RemoveIcon />
-                        </IconButton>
-                        {item.quantity}
-                        <IconButton 
-                          size="small" 
-                          onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                        >
-                          <AddIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="right">
-                        {(item.price * item.quantity).toFixed(2)} €
-                      </TableCell>
-                      <TableCell align="right">
-                        <IconButton 
-                          color="secondary" 
-                          onClick={() => handleRemoveItem(item.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-          
-          <Grid item xs={12} md={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Résumé de la commande
-                </Typography>
-                <Typography variant="body1">
-                  Total : {cart.total.toFixed(2)} €
-                </Typography>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  fullWidth 
-                  sx={{ mt: 2 }}
-                >
-                  Passer la commande
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      )}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Produit</TableCell>
+              <TableCell align="center">Prix</TableCell>
+              <TableCell align="center">Quantité</TableCell>
+              <TableCell align="center">Total</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {cart.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>
+                  <Box display="flex" alignItems="center">
+                    <img 
+                      src={`/images/chicha-${item.id}.jpg`} 
+                      alt={item.name} 
+                      style={{ width: 80, height: 80, objectFit: 'cover', marginRight: 16 }}
+                    />
+                    <Typography variant="subtitle1">{item.name}</Typography>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">{item.price.toFixed(2)} €</TableCell>
+                <TableCell align="center">
+                  <Box display="flex" alignItems="center" justifyContent="center">
+                    <IconButton 
+                      size="small" 
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
+                      <Remove />
+                    </IconButton>
+                    <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
+                    <IconButton 
+                      size="small" 
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      <Add />
+                    </IconButton>
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  {(item.price * item.quantity).toFixed(2)} €
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton 
+                    color="error" 
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Button 
+          variant="outlined" 
+          color="secondary" 
+          onClick={clearCart}
+        >
+          Vider le panier
+        </Button>
+        <Box>
+          <Typography variant="h6">
+            Total : {getTotalPrice().toFixed(2)} €
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            size="large" 
+            sx={{ mt: 2 }}
+          >
+            Procéder au paiement
+          </Button>
+        </Box>
+      </Box>
     </Container>
   );
 };

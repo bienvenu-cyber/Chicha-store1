@@ -15,15 +15,17 @@ import RegisterPage from './pages/RegisterPage';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ProductList from './components/ProductList';
+import { CartProvider } from './contexts/CartContext';
 
 const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#8B4513', // Couleur terre de Sienne pour l'ambiance chicha
+      main: '#8B4513', // Marron riche pour l'ambiance chicha
     },
     secondary: {
-      main: '#D2691E', // Nuance complémentaire
+      main: '#D2691E', // Nuance de marron complémentaire
     },
   },
   typography: {
@@ -35,19 +37,21 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
-        <Footer />
-      </Router>
+      <CartProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Routes>
+          <Footer />
+        </Router>
+      </CartProvider>
     </ThemeProvider>
   );
 };
