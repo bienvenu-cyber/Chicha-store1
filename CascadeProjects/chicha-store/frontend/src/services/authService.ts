@@ -10,6 +10,23 @@ import {
 import { handleApiError } from '../utils/errorHandler';
 import { monitoringService } from './monitoringService';
 
+// Ajoutez cette fonction au début du fichier
+const validatePassword = (password: string): boolean => {
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*]/.test(password);
+  
+  return password.length >= minLength && 
+         hasUpperCase && 
+         hasLowerCase && 
+         hasNumbers && 
+         hasSpecialChar;
+};
+
+// Modifiez la fonction validatePasswords existante pour utiliser cette nouvelle validation
+
 const API_URL = 'http://localhost:5000/api/auth';
 
 export class AuthService {
