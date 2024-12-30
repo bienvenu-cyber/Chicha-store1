@@ -38,3 +38,25 @@ export const handleApiError = (error: any) => {
         return 'Erreur de configuration';
     }
 };
+
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+export const apiClient = axios.create({
+    baseURL: API_URL,
+    timeout: 5000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+axiosRetry(apiClient, { 
+    retries: 3,
+    retryDelay: axiosRetry.exponentialDelay,
+    retryCondition: (error) => {
+        return axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+               error.response?.status === 429;
+    }
+});

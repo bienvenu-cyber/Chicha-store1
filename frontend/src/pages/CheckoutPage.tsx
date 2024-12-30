@@ -48,21 +48,30 @@ const CheckoutPage: React.FC = () => {
     }));
   };
 
-  const handleSubmitOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await createOrder({
-        items: cart.items,
-        total: cart.total,
-        shippingInfo,
-        paymentMethod
-      });
-      dispatch(clearCart());
-      // Redirection ou message de confirmation
-    } catch (error) {
-      console.error('Erreur lors de la commande', error);
-    }
-  };
+// Ajoutez ces états au début du composant
+const [isLoading, setIsLoading] = useState(false);
+
+// Remplacez handleSubmitOrder par cette version
+const handleSubmitOrder = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
+  try {
+    await createOrder({
+      items: cart.items,
+      total: cart.total,
+      shippingInfo,
+      paymentMethod
+    });
+    dispatch(clearCart());
+    // Ajoutez un système de notification
+    alert('Commande créée avec succès');
+  } catch (error) {
+    alert('Erreur lors de la création de la commande');
+    console.error('Erreur lors de la commande', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <Container maxWidth="md">
