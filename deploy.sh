@@ -1,69 +1,61 @@
 #!/bin/bash
 
-# Couleurs
-GREEN='\033[0;32m'
-NC='\033[0m'
+# Script de déploiement pour Chicha Store
 
-# Démarrer le démon Docker
-echo -e "${GREEN}🚀 Démarrage de Docker...${NC}"
-open -a Docker.app
+# Arrêter le script en cas d'erreur
+set -e
 
-# Attendre que Docker soit prêt
-echo -e "${GREEN}⏳ Attente du démarrage de Docker...${NC}"
-sleep 15
+# Variables
+BACKEND_DIR="./backend"
+FRONTEND_DIR="./frontend"
+PRODUCTION_ENV=".env.production"
 
-# Vérification des prérequis
-check_prerequisites() {
-    echo -e "${GREEN}🔍 Vérification des prérequis...${NC}"
-    
-    REQUIRED_TOOLS=("git" "npm" "docker" "docker-compose")
-    
-    for tool in "${REQUIRED_TOOLS[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then
-            echo -e "\033[31m❌ Outil manquant : $tool\033[0m"
-            exit 1
-        fi
-    done
-}
+# Vérifier les prérequis
+command -v node >/dev/null 2>&1 || { echo >&2 "Node.js est requis mais n'est pas installé."; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo >&2 "npm est requis mais n'est pas installé."; exit 1; }
+command -v pm2 >/dev/null 2>&1 || { echo >&2 "pm2 est requis mais n'est pas installé. Installez-le avec 'npm install -g pm2'"; exit 1; }
 
-# Préparation du déploiement
-prepare_deployment() {
-    echo -e "${GREEN}🛠️  Préparation du déploiement...${NC}"
-    
-    # Installation des dépendances frontend
-    cd frontend
-    npm install
-    npm run build
-    cd ..
-}
+# Étape 1: Mise à jour du code
+echo "🔄 Mise à jour du dépôt..."
+git pull origin main
 
-# Déploiement avec Docker Compose
-deploy_with_docker_compose() {
-    echo -e "${GREEN}🚀 Déploiement avec Docker Compose...${NC}"
-    
-    # Arrêter et supprimer les conteneurs existants
-    docker-compose down
-    
-    # Construire les images
-    docker-compose build
-    
-    # Démarrer les services
-    docker-compose up -d
-    
-    # Afficher les logs
-    docker-compose logs -f
-}
+# Étape 2: Installation des dépendances Backend
+echo "📦 Installation des dépendances Backend..."
+cd "$BACKEND_DIR"
+npm ci --production
+cp "$PRODUCTION_ENV" .env
 
-# Fonction principale
-main() {
-    echo -e "${GREEN}🌟 Déploiement de Chicha Store 🌟${NC}"
-    
-    check_prerequisites
-    prepare_deployment
-    deploy_with_docker_compose
-    
-    echo -e "${GREEN}✅ Déploiement terminé avec succès !${NC}"
-}
+# Étape 3: Build Backend
+echo "🛠️ Build Backend..."
+npm run build
 
-# Exécution
-main
+# Étape 4: Installation des dépendances Frontend
+echo "📦 Installation des dépendances Frontend..."
+cd "../$FRONTEND_DIR"
+npm ci --production
+cp "$PRODUCTION_ENV" .env
+
+# Étape 5: Build Frontend
+echo "🛠️ Build Frontend..."
+npm run build
+
+# Étape 6: Démarrage du Backend avec PM2
+echo "🚀 Démarrage du Backend..."
+cd "../$BACKEND_DIR"
+pm2 delete chicha-backend || true
+pm2 start dist/server.js --name chicha-backend
+
+# Étape 7: Déploiement Frontend (par exemple avec Nginx)
+echo "🌐 Déploiement Frontend..."
+sudo rm -rf /var/www/chicha-store/*
+sudo cp -r build/* /var/www/chicha-store/
+
+# Étape 8: Redémarrage des services
+echo "🔄 Redémarrage des services..."
+sudo systemctl restart nginx
+pm2 save
+
+echo "✅ Déploiement terminé avec succès !"
+
+# Optionnel : Nettoyage
+npm prune --production

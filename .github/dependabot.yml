@@ -1,55 +1,39 @@
 version: 2
 updates:
-  # Configuration pour le frontend
+  # Configuration pour les dépendances npm du frontend
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "production"
-    ignore:
-      - dependency-name: "react-scripts"
-        versions: [">=6.0.0"]
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "frontend"
-    commit-message:
-      prefix: "chore(frontend)"
-      include: "scope"
+    ignore:
+      - dependency-type: "devDependencies"
+        update-types: ["version-update:semver-patch"]
 
-  # Configuration pour le backend
+  # Configuration pour les dépendances npm du backend  
   - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "production"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "backend"
-    commit-message:
-      prefix: "chore(backend)"
-      include: "scope"
+    ignore:
+      - dependency-type: "devDependencies"
+        update-types: ["version-update:semver-patch"]
 
-  # Configuration pour l'admin
-  - package-ecosystem: "npm"
-    directory: "/admin"
+  # Configuration pour les actions GitHub
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "production"
+      interval: "monthly"
     labels:
       - "dependencies"
-      - "admin"
-    commit-message:
-      prefix: "chore(admin)"
-      include: "scope"
+      - "github-actions"
 
 # Configuration de sécurité
 security-updates:
