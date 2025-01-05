@@ -62,3 +62,8 @@
   "license": "ISC",
   "description": ""
 }
+{
+  "scripts": {
+    "build": "cd backend && npm install"
+  }
+}
