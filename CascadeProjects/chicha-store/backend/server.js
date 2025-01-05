@@ -1,9 +1,12 @@
-const express = import('express');
-const http = import('http');
-const mongoose = import('mongoose');
-const cors = import('cors');
-import('dotenv').config();
-const path = import('path');
+import express from 'express';
+import http from 'http';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
+import helmet from 'helmet';
+
+dotenv.config();
 
 // Services
 const WebSocketService = import('./services/websocketService');
