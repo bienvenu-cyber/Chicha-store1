@@ -8,41 +8,8 @@
         }]
     ],
     "plugins": [
-        ["@babel/plugin-transform-runtime", {
-            "regenerator": true,
-            "useESModules": false
-        }],
         ["@babel/plugin-transform-modules-commonjs", {
             "allowTopLevelThis": true
-        }],
-        ["module-resolver", {
-            "alias": {
-                "mongoose": "./node_modules/mongoose/index.js"
-            }
         }]
-    ],
-    "env": {
-        "test": {
-            "presets": [
-                ["@babel/preset-env", {
-                    "targets": {
-                        "node": "current"
-                    },
-                    "modules": "commonjs"
-                }]
-            ],
-            "plugins": [
-                ["@babel/plugin-transform-modules-commonjs"],
-                ["@babel/plugin-transform-runtime", {
-                    "regenerator": true,
-                    "useESModules": false
-                }],
-                ["module-resolver", {
-                    "alias": {
-                        "mongoose": "./node_modules/mongoose/index.js"
-                    }
-                }]
-            ]
-        }
-    }
+    ]
 }

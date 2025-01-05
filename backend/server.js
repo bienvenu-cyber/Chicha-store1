@@ -5,6 +5,13 @@ import dotenv from 'dotenv';
 import { connectDB } from './src/config/db.js';
 import logger from './src/config/logger.js';
 
+// Routes
+import articleAnalyticsRoutes from './src/routes/articleAnalyticsRoutes.js';
+import analyticsArchiveRoutes from './src/routes/analyticsArchiveRoutes.js';
+
+// Services
+import analyticsCleanupService from './src/services/analyticsCleanupService.js';
+
 dotenv.config();
 
 const app = express();
@@ -19,6 +26,9 @@ app.use(express.json());
 connectDB()
   .then(() => {
     logger.info('Base de données connectée avec succès');
+    
+    // Initialiser le service de nettoyage des analytics
+    analyticsCleanupService.start();
   })
   .catch((error) => {
     logger.error('Échec de connexion à la base de données', error);
@@ -33,6 +43,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Routes d'analytics
+app.use('/api/article-analytics', articleAnalyticsRoutes);
+app.use('/api/analytics-archives', analyticsArchiveRoutes);
+
 // Gestion des erreurs
 app.use((err, req, res, next) => {
   logger.error(err.stack);
@@ -46,3 +60,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   logger.info(`Serveur démarré sur le port ${PORT}`);
 });
+
+export default app;

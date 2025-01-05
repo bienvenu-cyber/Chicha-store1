@@ -159,3 +159,72 @@ export const searchProducts = async (
     throw new Error('Erreur inattendue lors de la recherche de produits');
   }
 };
+
+// Ajout de la fonction createProduct
+export const createProduct = async (productData: Omit<Product, 'id'>): Promise<Product> => {
+  try {
+    const response = await axios.post(API_URL, productData);
+    
+    // Invalider le cache pour forcer un rechargement
+    cacheManager.delete('all_products');
+    
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la création du produit', error);
+    
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        throw new Error(error.response.data.message || 'Erreur lors de la création du produit');
+      }
+    }
+    
+    throw new Error('Erreur de réseau ou serveur');
+  }
+};
+
+// Ajout de la fonction updateProduct
+export const updateProduct = async (
+  id: string, 
+  productData: Partial<Omit<Product, 'id'>>
+): Promise<Product> => {
+  try {
+    const response = await axios.patch(`${API_URL}/${id}`, productData);
+    
+    // Invalider le cache pour forcer un rechargement
+    cacheManager.delete('all_products');
+    cacheManager.delete(`product_${id}`);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du produit', error);
+    
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        throw new Error(error.response.data.message || 'Erreur lors de la mise à jour du produit');
+      }
+    }
+    
+    throw new Error('Erreur de réseau ou serveur');
+  }
+};
+
+// Ajout de la fonction deleteProduct
+export const deleteProduct = async (id: string): Promise<void> => {
+  try {
+    await axios.delete(`${API_URL}/${id}`);
+    
+    // Invalider le cache pour forcer un rechargement
+    cacheManager.delete('all_products');
+    cacheManager.delete(`product_${id}`);
+  } catch (error) {
+    console.error('Erreur lors de la suppression du produit', error);
+    
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        throw new Error(error.response.data.message || 'Erreur lors de la suppression du produit');
+      }
+    }
+    
+    throw new Error('Erreur de réseau ou serveur');
+  }
+};

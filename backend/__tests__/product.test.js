@@ -1,4 +1,6 @@
-import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";import { setupTestDatabase, teardownTestDatabase } from './testUtils.js.js.js.js.js';
+import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";
+import { setupTestDatabase, teardownTestDatabase } from './testUtils.js';
+import Product from '../src/models/Product.js';
 
 describe('Product Routes', () => {
   beforeAll(async () => {
@@ -19,24 +21,26 @@ describe('Product Routes', () => {
       await Product.create([
         { 
           name: 'Test Product 1', 
-          description: 'Test Description 1', 
-          price: 10.99, 
-          category: 'Test Category' 
+          description: 'Test Description 1',
+          price: 10.99,
+          category: 'Test Category'
         },
         { 
           name: 'Test Product 2', 
-          description: 'Test Description 2', 
-          price: 15.99, 
-          category: 'Test Category' 
+          description: 'Test Description 2',
+          price: 20.99,
+          category: 'Test Category'
         }
       ]);
 
-      const res = await request(app).get('/api/products');
-      
-      expect(res.statusCode).toBe(200);
-      expect(res.body.length).toBe(2);
-      expect(res.body[0]).toHaveProperty('name');
-      expect(res.body[0]).toHaveProperty('price');
+      // Perform the test
+      const response = await request(app)
+        .get('/api/products')
+        .expect(200);
+
+      expect(response.body.length).toBe(2);
+      expect(response.body[0].name).toBe('Test Product 1');
+      expect(response.body[1].name).toBe('Test Product 2');
     });
   });
 

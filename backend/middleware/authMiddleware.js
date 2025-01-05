@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User.js.js';
+import { User } from '../models/User.js';
 
 export default class AuthMiddleware {
   // Vérification du token
@@ -141,6 +141,81 @@ export default class AuthMiddleware {
       console.error('Erreur de journalisation de sécurité', error);
     }
   }
-}
 
-export default AuthMiddleware;
+  // Middleware pour vérifier si l'utilisateur est authentifié
+  static async authenticate(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ error: 'Token manquant' });
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      // Vérifier si l'utilisateur existe encore
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return res.status(401).json({ error: 'Utilisateur non trouvé' });
+      }
+
+      // Vérifier le statut du compte
+      if (user.status !== 'active') {
+        return res.status(403).json({ 
+          error: 'Compte inactif',
+          status: user.status 
+        });
+      }
+
+      req.user = user;
+      next();
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ error: 'Token expiré' });
+      }
+      return res.status(403).json({ error: 'Token invalide' });
+    }
+  }
+
+  // Middleware pour vérifier les permissions admin
+  static requireAdmin(req, res, next) {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Non authentifié' });
+    }
+
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ 
+        error: 'Accès réservé aux administrateurs' 
+      });
+    }
+
+    next();
+  }
+
+  // Middleware pour les événements publics (tracking)
+  static optionalAuthenticate(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      // Autoriser les requêtes sans authentification
+      return next();
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      
+      // Vérifier si l'utilisateur existe encore
+      const user = await User.findById(decoded.id);
+      if (user && user.status === 'active') {
+        req.user = user;
+      }
+
+      next();
+    } catch (error) {
+      // En cas d'erreur de token, continuer sans utilisateur
+      next();
+    }
+  }
+}

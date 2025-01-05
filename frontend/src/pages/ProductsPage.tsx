@@ -16,10 +16,14 @@ import {
   Slider,
   Box,
   Chip,
-  Stack
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent
 } from '@mui/material';
-import { fetchProducts, Product } from '../services/productService';
+import { fetchProducts, Product, deleteProduct } from '../services/productService';
 import { useNotification } from '../contexts/NotificationContext';
+import ProductForm from '../components/ProductForm';
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,6 +32,10 @@ const ProductsPage: React.FC = () => {
   const [category, setCategory] = useState('');
   const [priceRange, setPriceRange] = useState<number[]>([0, 500]);
   const { showNotification } = useNotification();
+  
+  // Nouveaux états pour la gestion du formulaire
+  const [openProductForm, setOpenProductForm] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
 
   const categories = [
     'chicha', 
@@ -48,6 +56,36 @@ const ProductsPage: React.FC = () => {
     };
     loadProducts();
   }, []);
+
+  // Nouvelle fonction pour supprimer un produit
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      await deleteProduct(productId);
+      const updatedProducts = products.filter(p => p.id !== productId);
+      setProducts(updatedProducts);
+      setFilteredProducts(updatedProducts);
+      showNotification('Produit supprimé avec succès', 'success');
+    } catch (error) {
+      showNotification('Erreur lors de la suppression du produit', 'error');
+    }
+  };
+
+  // Nouvelle fonction pour ouvrir le formulaire de modification
+  const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setOpenProductForm(true);
+  };
+
+  // Fonction de réussite du formulaire
+  const handleSubmitSuccess = () => {
+    setOpenProductForm(false);
+    setSelectedProduct(undefined);
+    // Recharger les produits
+    fetchProducts().then(fetchedProducts => {
+      setProducts(fetchedProducts);
+      setFilteredProducts(fetchedProducts);
+    });
+  };
 
   useEffect(() => {
     let result = products;
@@ -81,6 +119,20 @@ const ProductsPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
+      {/* Bouton Ajouter Produit */}
+      <Box sx={{ my: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Button 
+          variant="contained" 
+          color="primary"
+          onClick={() => {
+            setSelectedProduct(undefined);
+            setOpenProductForm(true);
+          }}
+        >
+          Ajouter un Produit
+        </Button>
+      </Box>
+
       <Typography variant="h3" gutterBottom>
         Nos Produits
       </Typography>
@@ -157,6 +209,28 @@ const ProductsPage: React.FC = () => {
         </Stack>
       </Box>
 
+      {/* Dialog pour le formulaire de produit */}
+      <Dialog 
+        open={openProductForm} 
+        onClose={() => {
+          setOpenProductForm(false);
+          setSelectedProduct(undefined);
+        }}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          {selectedProduct ? 'Modifier un Produit' : 'Ajouter un Produit'}
+        </DialogTitle>
+        <DialogContent>
+          <ProductForm 
+            product={selectedProduct} 
+            onSubmitSuccess={handleSubmitSuccess}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Modification de la liste des produits pour ajouter des actions */}
       <Grid container spacing={3}>
         {filteredProducts.length === 0 ? (
           <Grid item xs={12}>
@@ -170,23 +244,33 @@ const ProductsPage: React.FC = () => {
               <Card>
                 <CardMedia
                   component="img"
-                  height="200"
-                  image={product.imageUrl}
+                  height="194"
+                  image={product.imageUrl || '/default-product.jpg'}
                   alt={product.name}
                 />
                 <CardContent>
-                  <Typography variant="h5">{product.name}</Typography>
+                  <Typography variant="h6">{product.name}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     {product.description}
                   </Typography>
-                  <Typography variant="h6">{product.price} €</Typography>
+                  <Typography variant="subtitle1">
+                    Prix: {product.price} €
+                  </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">
-                    Détails
+                  <Button 
+                    size="small" 
+                    color="primary"
+                    onClick={() => handleEditProduct(product)}
+                  >
+                    Modifier
                   </Button>
-                  <Button size="small" color="secondary">
-                    Ajouter au panier
+                  <Button 
+                    size="small" 
+                    color="error"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    Supprimer
                   </Button>
                 </CardActions>
               </Card>

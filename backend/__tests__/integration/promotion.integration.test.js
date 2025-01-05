@@ -1,6 +1,10 @@
-import { jest, describe, test, expect, beforeEach, afterEach } from "@jest/globals";import Promotion from '../../models/Promotion.js.js.js.js';
-import Product from '../../models/Product.js.js.js.js';
-import { setupTestDatabase, teardownTestDatabase } from '../testUtils.js.js.js.js';
+import { jest, describe, it, expect } from '@jest/globals';
+import request from 'supertest';
+import { setupTestDatabase, teardownTestDatabase } from '../testUtils.js';
+import app from '../../src/app.js';
+import Promotion from '../../src/models/Promotion.js';
+import Product from '../../src/models/Product.js';
+import User from '../../src/models/User.js';
 
 describe('Promotion Integration Tests', () => {
   let adminUser, regularUser, testProduct, authTokenAdmin, authTokenUser;
