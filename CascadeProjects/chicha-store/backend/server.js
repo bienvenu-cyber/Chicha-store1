@@ -22,6 +22,7 @@ const cryptoPaymentRoutes = import('./routes/cryptoPayments');
 const authRoutes = import('./routes/auth');
 
 const app = express();
+app.use(helmet()); // Ajouter cette ligne pour la sécurité
 const server = http.createServer(app);
 
 // Middleware
