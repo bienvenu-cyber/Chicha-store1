@@ -49,7 +49,7 @@ app.use('/api/analytics-archives', analyticsArchiveRoutes);
 
 // Gestion des erreurs
 app.use((err, req, res, next) => {
-  logger.error(err.stack);
+  logger.error('Erreur non gérée', err);
   res.status(500).json({
     status: 'error',
     message: 'Une erreur interne est survenue'
