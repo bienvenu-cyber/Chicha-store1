@@ -8,7 +8,8 @@ import {
     Box, 
     Grid, 
     Typography, 
-    Alert 
+    Alert, 
+    CircularProgress
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -21,17 +22,27 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError('');
+        setLoading(true);
+
+        if (!email || !password) {
+            setError('Tous les champs sont obligatoires');
+            setLoading(false);
+            return;
+        }
 
         try {
             await authService.login(email, password);
             navigate('/dashboard');
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Erreur de connexion');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -104,8 +115,9 @@ const Login: React.FC = () => {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                disabled={loading}
                             >
-                                Connexion
+                                {loading ? <CircularProgress size={24} color="inherit" /> : 'Connexion'}
                             </Button>
                         </Box>
                     </Box>

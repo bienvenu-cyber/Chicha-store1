@@ -5,7 +5,9 @@ import {
     Typography, 
     Card, 
     CardContent, 
-    Box 
+    Box, 
+    CircularProgress, 
+    Alert 
 } from '@mui/material';
 import { 
     AttachMoney as MoneyIcon, 
@@ -41,10 +43,13 @@ const Dashboard: React.FC = () => {
         totalProducts: 0,
         totalUsers: 0
     });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchDashboardStats = async () => {
             try {
+                setLoading(true);
                 const [
                     revenueResponse, 
                     ordersResponse, 
@@ -65,11 +70,38 @@ const Dashboard: React.FC = () => {
                 });
             } catch (error) {
                 console.error('Erreur lors du chargement des statistiques', error);
+                setError('Impossible de charger les statistiques.');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchDashboardStats();
     }, []);
+
+    if (loading) {
+        return (
+            <Container maxWidth="xl">
+                <Typography variant="h4" sx={{ mb: 4 }}>
+                    Tableau de Bord
+                </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                    <CircularProgress />
+                </Box>
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container maxWidth="xl">
+                <Typography variant="h4" sx={{ mb: 4 }}>
+                    Tableau de Bord
+                </Typography>
+                <Alert severity="error">{error}</Alert>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="xl">

@@ -18,7 +18,10 @@ import {
     Select,
     MenuItem,
     FormControl,
-    InputLabel
+    InputLabel,
+    CircularProgress,
+    Alert,
+    Pagination
 } from '@mui/material';
 import { 
     Visibility as VisibilityIcon,
@@ -38,17 +41,26 @@ const OrderManagement: React.FC = () => {
     const [reportStartDate, setReportStartDate] = useState<Date | null>(null);
     const [reportEndDate, setReportEndDate] = useState<Date | null>(null);
     const [salesReport, setSalesReport] = useState<any>(null);
+    const [loadingOrders, setLoadingOrders] = useState(false);
+    const [loadingReport, setLoadingReport] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [page, setPage] = useState(1);
+    const ordersPerPage = 10; // Adjust per your needs
 
     useEffect(() => {
         fetchOrders();
-    }, []);
+    }, [page]);
 
     const fetchOrders = async () => {
+        setLoadingOrders(true);
+        setError(null);
         try {
-            const data = await orderService.getAll();
+            const data = await orderService.getAll(page, ordersPerPage);
             setOrders(data);
         } catch (error) {
-            console.error('Erreur lors du chargement des commandes', error);
+            setError('Erreur lors du chargement des commandes');
+        } finally {
+            setLoadingOrders(false);
         }
     };
 
@@ -58,7 +70,7 @@ const OrderManagement: React.FC = () => {
             setSelectedOrder(fullOrder);
             setOpenOrderDialog(true);
         } catch (error) {
-            console.error('Erreur lors du chargement des détails de la commande', error);
+            setError('Erreur lors du chargement des détails de la commande');
         }
     };
 
@@ -69,13 +81,19 @@ const OrderManagement: React.FC = () => {
                 fetchOrders();
                 setOpenOrderDialog(false);
             } catch (error) {
-                console.error('Erreur lors de la mise à jour du statut', error);
+                setError('Erreur lors de la mise à jour du statut');
             }
         }
     };
 
     const handleGenerateReport = async () => {
         if (reportStartDate && reportEndDate) {
+            if (reportStartDate > reportEndDate) {
+                setError('La date de début doit être antérieure à la date de fin');
+                return;
+            }
+            setLoadingReport(true);
+            setError(null);
             try {
                 const report = await orderService.getSalesReport(
                     reportStartDate.toISOString(), 
@@ -83,7 +101,9 @@ const OrderManagement: React.FC = () => {
                 );
                 setSalesReport(report);
             } catch (error) {
-                console.error('Erreur lors de la génération du rapport', error);
+                setError('Erreur lors de la génération du rapport');
+            } finally {
+                setLoadingReport(false);
             }
         }
     };
@@ -104,6 +124,8 @@ const OrderManagement: React.FC = () => {
                 <Typography variant="h4" sx={{ mb: 4 }}>
                     Gestion des Commandes
                 </Typography>
+
+                {error && <Alert severity="error">{error}</Alert>}
 
                 <Button 
                     variant="contained" 
@@ -127,34 +149,49 @@ const OrderManagement: React.FC = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {orders.map((order) => (
-                                <TableRow key={order._id}>
-                                    <TableCell>{order._id}</TableCell>
-                                    <TableCell>{order.user}</TableCell>
-                                    <TableCell>{order.total} €</TableCell>
-                                    <TableCell>
-                                        {new Date(order.createdAt).toLocaleDateString()}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Chip 
-                                            label={order.status} 
-                                            color={getStatusColor(order.status)} 
-                                            size="small" 
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button 
-                                            startIcon={<VisibilityIcon />} 
-                                            onClick={() => handleViewOrder(order)}
-                                        >
-                                            Détails
-                                        </Button>
+                            {loadingOrders ? (
+                                <TableRow>
+                                    <TableCell colSpan={6} align="center">
+                                        <CircularProgress />
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            ) : (
+                                orders.map((order) => (
+                                    <TableRow key={order._id}>
+                                        <TableCell>{order._id}</TableCell>
+                                        <TableCell>{order.user}</TableCell>
+                                        <TableCell>{order.total} €</TableCell>
+                                        <TableCell>
+                                            {new Date(order.createdAt).toLocaleDateString()}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip 
+                                                label={order.status} 
+                                                color={getStatusColor(order.status)} 
+                                                size="small" 
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button 
+                                                startIcon={<VisibilityIcon />} 
+                                                onClick={() => handleViewOrder(order)}
+                                            >
+                                                Détails
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
+
+                <Pagination
+                    count={Math.ceil(100 / ordersPerPage)} // Update count based on total orders
+                    page={page}
+                    onChange={(e, value) => setPage(value)}
+                    sx={{ mt: 2 }}
+                />
 
                 {/* Dialog Détails Commande */}
                 <Dialog 
@@ -247,9 +284,9 @@ const OrderManagement: React.FC = () => {
                         <Button 
                             variant="contained" 
                             onClick={handleGenerateReport}
-                            disabled={!reportStartDate || !reportEndDate}
+                            disabled={!reportStartDate || !reportEndDate || loadingReport}
                         >
-                            Générer le Rapport
+                            {loadingReport ? <CircularProgress size={24} /> : 'Générer le Rapport'}
                         </Button>
 
                         {salesReport && (

@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 from datetime import datetime
 import subprocess
 import platform
+ImportWarning
+ImportError
 
 # Configuration du logging
 logging.basicConfig(
